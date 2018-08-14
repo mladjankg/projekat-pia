@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Busomanijak | Registracija</title>
+        <link type="text/css" rel="stylesheet" href="css/style.css"></link>
+        <script src="js/validation.js"></script>
+    </h:head>
+    <h:body>
+         <div class="login-page">
+            <div class="form">
+                <h3>Registracija</h3>
+<!--        <h:form onsubmit="return checkData(#{accountController.noviKorisnik.korisnickoIme}, #{accountController.noviKorisnik.lozinka}, #{accountController.noviKorisnik.potvrdaLozinke})">-->
+                <h:form onsubmit="return test()" id="registrationForm">
+                    <table>
+                        <tr>
+                            <td>
+                                <h:outputLabel for="ime">Ime:</h:outputLabel>
+                            </td>
+                            <td>
+                                <h:inputText id="ime" a:placeholder="ime" value="#{accountController.noviKorisnik.ime}" required="true" requiredMessage="Obavezno polje."/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               <h:message for ="ime" style="color:red"/> 
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    <h:panelGrid>
+                    
+                    
+                   
+                    
+                    <h:inputText id="korisnickoIme" a:placeholder="korisničko ime" value="#{accountController.noviKorisnik.korisnickoIme}" onblur="return checkUsername()" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="korisnickoIme" style="color:red"/>
+                    
+                    <h:inputSecret id="lozinka" a:placeholder="lozinka" value="#{accountController.noviKorisnik.lozinka}" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="lozinka" style="color:red"/>
+                    
+                    <h:inputSecret id="potvrdaLozinke" a:placeholder="potvrda lozinke" value="#{accountController.noviKorisnik.lozinka}" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="potvrdaLozinke" style="color:red"/>
+                    
+                    <h:inputText id="adresa" a:placeholder="adresa stanovanja" value="#{accountController.noviKorisnik.adresa}" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="adresa" style="color:red"/>
+                    
+                    <h:inputText id="datumRodjenja" a:placeholder="datum rođenja (dd-mm-yyyy)" value="#{accountController.noviKorisnik.datumRodjenja}" required="true" requiredMessage="Obavezno polje.">
+                        <f:convertDateTime pattern="dd-mm-yyyy" />
+                    </h:inputText>
+                    <h:message for ="datumRodjenja" style="color:red"/>
+                    
+                    <h:inputText id="telefon" a:placeholder="kontakt telefon" value="#{accountController.noviKorisnik.telefon}" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="telefon" style="color:red"/>
+                    
+                    Kategorija zaposlenja:
+                    <h:selectOneRadio required="true" requiredMessage="Obavezno polje.">
+                        <f:selectItem itemValue = "1" itemLabel="Nezaposlen"/>
+                        <f:selectItem itemValue = "2" itemLabel="Zaposlen"/>
+                        <f:selectItem itemValue = "3" itemLabel="Student"/>
+                        <f:selectItem itemValue = "4" itemLabel="Lice sa invaliditetom"/>
+                        <f:selectItem itemValue = "5" itemLabel="Penzioner"/>
+                    </h:selectOneRadio>
+                    <h:message for ="ime" style="color:red"/>
+                    
+                    <h:inputText a:placeholder="e-mail" value="#{accountController.noviKorisnik.mejl}"/>
+                    <h:commandButton value="Registruj se" action="#{accountController.register()}"/>
+
+                    </h:panelGrid>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>
+

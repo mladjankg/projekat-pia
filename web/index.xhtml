@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Busomanijak</title>
+        <link type="text/css" rel="stylesheet" href="css/style.css"></link>
+    </h:head>
+    <h:body>
+        <div class="login-page">
+            <div class="form">
+        <h:form>
+            <h:panelGrid columns="1">
+            <h:inputText a:placeholder="korisnicko ime" value="#{accountController.username}"/>
+            <h:inputSecret a:placeholder="sifra" value="#{accountController.password}"/>
+            <h:commandButton value="Prijavi se" action="#{accountController.login()}"/>
+            <h:column>Nemaš nalog? <h:commandLink action="registracija?faces-redirect=true">Registruj se</h:commandLink> </h:column>
+            </h:panelGrid>
+        </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>
+

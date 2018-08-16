@@ -6,8 +6,6 @@ package beans.managers;
 
 import beans.Korisnik;
 import beans.Poruka;
-import java.util.List;
-import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.hibernate.HibernateException;
@@ -20,21 +18,18 @@ import utils.HibernateUtil;
  *
  * @author Mlađan
  */
-public class KorisnikManager {
+public class BeanManager {
 
-    public static Integer addKorisnik(Korisnik korisnik) {
-        if (korisnik == null) {
-            return null;
-        }
-
+    
+    public static Object getBean(Class beanClass, Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         Transaction tx = null;
-        Integer korisnikId = null;
 
+        Object object = null;
         try {
             tx = session.beginTransaction();
-            korisnikId = (Integer) session.save(korisnik);
+            object = session.get(beanClass, id);            
             tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
@@ -45,44 +40,43 @@ public class KorisnikManager {
             session.close();
         }
 
-        return korisnikId;
+        return object;
     }
+    
+    public static Integer addBean(Object o) {
+        if (o == null) {
+            return null;
+        }
 
-    public static Korisnik getKorisnikByUsername(String username) {
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
         Transaction tx = null;
-        Korisnik k = null;
+        Integer beanId = null;
+
         try {
             tx = session.beginTransaction();
-            Query hqlQuery = session.createQuery("from korisnici where korisnicko_ime = :name");
-            hqlQuery.setParameter("name", username);
-            k = (Korisnik) hqlQuery.getSingleResult();
+            beanId = (Integer) session.save(o);            
+            tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
                 tx.rollback();
             }
 
-        } catch(NoResultException ex) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } 
-        finally {
+        } finally {
             session.close();
         }
 
-        return k;
+        return beanId;
     }
-    
-    public static void updateKorisnik(Korisnik k) {
+
+    public static void updateBean(Object o) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
         try {
-             tx = session.beginTransaction();
-             session.update(k);
-             tx.commit();
+            tx = session.beginTransaction();
+            session.update(o);
+            tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
                 tx.rollback();
@@ -91,27 +85,27 @@ public class KorisnikManager {
             ex.printStackTrace();
         } finally {
             session.close();
-        }   
+        }
     }
-    
-    public static List<Korisnik> getZahteveZaRegistraciju() {
+
+    public static void deleteBean(Class beanClass, Integer id) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
-        List<Korisnik> korisnici = null;
-         try {
+
+        try {
             tx = session.beginTransaction();
-            Query hqlQuery = session.createQuery("from korisnici where admin_potvrdio = false");
-            
-            korisnici = hqlQuery.getResultList();
+            Object o = session.get(beanClass, id);
+            session.delete(o);
+            tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
                 tx.rollback();
             }
+
+            ex.printStackTrace();
         } finally {
             session.close();
         }
-
-        return korisnici;
     }
 }

@@ -92,7 +92,8 @@
                     </table>
                     <h:panelGrid>
                     
-                    
+                    <h:inputText id="prezime" a:placeholder="prezime" value="#{accountController.noviKorisnik.prezime}" required="true" requiredMessage="Obavezno polje."/>
+                    <h:message for ="prezime" style="color:red"/>
                    
                     
                     <h:inputText id="korisnickoIme" a:placeholder="korisničko ime" value="#{accountController.noviKorisnik.korisnickoIme}" onblur="return checkUsername()" required="true" requiredMessage="Obavezno polje."/>
@@ -116,12 +117,13 @@
                     <h:message for ="telefon" style="color:red"/>
                     
                     Kategorija zaposlenja:
-                    <h:selectOneRadio required="true" requiredMessage="Obavezno polje.">
-                        <f:selectItem itemValue = "1" itemLabel="Nezaposlen"/>
-                        <f:selectItem itemValue = "2" itemLabel="Zaposlen"/>
-                        <f:selectItem itemValue = "3" itemLabel="Student"/>
-                        <f:selectItem itemValue = "4" itemLabel="Lice sa invaliditetom"/>
-                        <f:selectItem itemValue = "5" itemLabel="Penzioner"/>
+                    <h:selectOneRadio required="true" requiredMessage="Obavezno polje." value="#{accountController.noviKorisnik.kategorijaZaposlenjaInteger}">
+                        <f:selectItem itemValue = "0" itemLabel="Nezaposlen"/>
+                        <f:selectItem itemValue = "1" itemLabel="Zaposlen"/>
+                        <f:selectItem itemValue = "2" itemLabel="Student"/>
+                        <f:selectItem itemValue = "3" itemLabel="Lice sa invaliditetom"/>
+                        <f:selectItem itemValue = "4" itemLabel="Penzioner"/>
+
                     </h:selectOneRadio>
                     <h:message for ="ime" style="color:red"/>
                     

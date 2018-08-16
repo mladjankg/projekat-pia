@@ -6,14 +6,20 @@
 package beans;
 
 import enums.KategorijaZaposlenja;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 
@@ -44,10 +50,27 @@ public class Korisnik {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "kategorija_zaposlenja")
     private KategorijaZaposlenja kategorijaZaposlenja;
+    
+    @Transient
+    private Integer kategorijaZaposlenjaInteger;
+    
     private String mejl;
-    private Boolean admin;
+    private boolean admin;
+    
+    @Column(name = "admin_potvrdio")
+    private boolean adminPotvrdio;
+    
+    @Column(name = "korisnik_validan")
+    private boolean korisnikValidan;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "korisnik")
+    private List<Poruka> poruke = new ArrayList<Poruka>();
+    
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "korisnik")
+    private KartaGradskiPrevoz gradskaKarta;
+    
     public Korisnik() {
+        poruke = new ArrayList<Poruka>();
     }
 
     public Korisnik(String ime, String prezime, String korisnickoIme, String lozinka, String potvrdaLozinke, String adresa, Date datumRodjenja, String telefon, KategorijaZaposlenja kategorijaZaposlenja, String mejl, boolean admin) {
@@ -158,11 +181,11 @@ public class Korisnik {
         this.mejl = mejl;
     }
 
-    public Boolean isAdmin() {
+    public boolean isAdmin() {
         return admin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setAdmin(boolean admin) {
         this.admin = admin;
     }
 
@@ -174,8 +197,55 @@ public class Korisnik {
         this.potvrdaLozinke = potvrdaLozinke;
     }
 
-   
-    
+    public boolean isAdminPotvrdio() {
+        return adminPotvrdio;
+    }
+
+    public void setAdminPotvrdio(boolean adminPotvrdio) {
+        this.adminPotvrdio = adminPotvrdio;
+    }
+
+    public boolean isKorisnikValidan() {
+        return korisnikValidan;
+    }
+
+    public void setKorisnikValidan(boolean korisnikValidan) {
+        this.korisnikValidan = korisnikValidan;
+    }
+
+
+    public List<Poruka> getPoruke() {
+        return poruke;
+    }
+
+    public void setPoruke(ArrayList<Poruka> poruke) {
+        this.poruke = poruke;
+    }
+
+    public Integer getKategorijaZaposlenjaInteger() {
+        return kategorijaZaposlenjaInteger;
+    }
+
+    public void setKategorijaZaposlenjaInteger(Integer kategorijaZaposlenjaInteger) {
+        switch(kategorijaZaposlenjaInteger) {
+            case 0:
+                this.kategorijaZaposlenja = KategorijaZaposlenja.NEZAPOSLEN;
+                break;
+            case 1:
+                this.kategorijaZaposlenja = KategorijaZaposlenja.ZAPOSLEN;
+                break;
+            case 2:
+                this.kategorijaZaposlenja = KategorijaZaposlenja.STUDENT;
+                break;
+            case 3:
+                this.kategorijaZaposlenja = KategorijaZaposlenja.LICE_SA_INVALIDITETOM;
+                break;
+            case 4:
+                this.kategorijaZaposlenja = KategorijaZaposlenja.PENZIONER;
+                break;
+        }
+        this.kategorijaZaposlenjaInteger = kategorijaZaposlenjaInteger;
+    }
     
     
 }

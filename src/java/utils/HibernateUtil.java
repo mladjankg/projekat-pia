@@ -5,8 +5,11 @@
 package utils;
 
 import beans.GradskaLinija;
+import beans.Karta;
+import beans.KartaGradskiPrevoz;
 import beans.Korisnik;
 import beans.Polazak;
+import beans.Poruka;
 import beans.Stanica;
 import beans.Vozac;
 import java.io.File;
@@ -27,13 +30,16 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Polazak.class);
         configuration.addAnnotatedClass(Stanica.class);
         configuration.addAnnotatedClass(GradskaLinija.class);
+        configuration.addAnnotatedClass(Poruka.class);
+        configuration.addAnnotatedClass(KartaGradskiPrevoz.class);
+        configuration.addAnnotatedClass(Karta.class);
         
-        try {
+       // try {
         sessionFactory = configuration.configure().buildSessionFactory();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        //}
+       // catch (Exception e) {
+       //     e.printStackTrace();
+       // }
     }
     
     public static SessionFactory getSessionFactory() {

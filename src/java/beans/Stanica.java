@@ -30,12 +30,55 @@ public class Stanica {
     @Column(name = "tip_stanice")
     private TipStanice tipStanice;
 
+    private double latitude;
+    private double longitude;
+    
     public Stanica() {
     }
 
     public Stanica(String naziv, TipStanice tipStanice) {
         this.naziv = naziv;
         this.tipStanice = tipStanice;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public TipStanice getTipStanice() {
+        return tipStanice;
+    }
+
+    public void setTipStanice(TipStanice tipStanice) {
+        this.tipStanice = tipStanice;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     
     

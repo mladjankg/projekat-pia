@@ -69,6 +69,11 @@ public class Korisnik {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "korisnik")
     private KartaGradskiPrevoz gradskaKarta;
     
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "korisnik")
+    private List<Karta> karte = new ArrayList<Karta>();
+    
+    private static final String[] kategorije = new String[] {"zaposlen", "nezaposlen", "student", "lice sa invaliditetom", "penzioner"};
+    
     public Korisnik() {
         poruke = new ArrayList<Poruka>();
     }
@@ -246,6 +251,26 @@ public class Korisnik {
         }
         this.kategorijaZaposlenjaInteger = kategorijaZaposlenjaInteger;
     }
+
+    public KartaGradskiPrevoz getGradskaKarta() {
+        return gradskaKarta;
+    }
+
+    public void setGradskaKarta(KartaGradskiPrevoz gradskaKarta) {
+        this.gradskaKarta = gradskaKarta;
+    }
+
+    public List<Karta> getKarte() {
+        return karte;
+    }
+
+    public void setKarte(List<Karta> karte) {
+        this.karte = karte;
+    }
     
+    
+    public String getKategorijaZaposlenjaString() {
+        return kategorije[kategorijaZaposlenja.ordinal()];
+    }
     
 }

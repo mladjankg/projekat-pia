@@ -6,6 +6,7 @@ package beans.managers;
 
 import beans.Korisnik;
 import beans.Poruka;
+import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.hibernate.HibernateException;
@@ -107,5 +108,29 @@ public class BeanManager {
         } finally {
             session.close();
         }
+    }
+    
+    public static List getList(String queryString) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        List list = null;
+        
+        try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery(queryString);
+            list = hqlQuery.getResultList();
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+        
+        return list;
     }
 }

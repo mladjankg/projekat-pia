@@ -9,6 +9,8 @@ import beans.managers.KorisnikManager;
 import java.io.File;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -17,45 +19,95 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "accountController")
 @SessionScoped
 public class AccountController {
+
     private Korisnik korisnik;
     private Korisnik noviKorisnik;
     private String username;
     private String password;
-    
+    private String loginError;
+
     public AccountController() {
         korisnik = null;
         noviKorisnik = new Korisnik();
         username = null;
         password = null;
-        String path = new File(".").getAbsolutePath();
-
 
     }
-    
+
     public String login() {
-        
-        username = password = null;
-        noviKorisnik = null;
-        return null;
+        Korisnik k = KorisnikManager.getKorisnikByUsername(this.username);
+        if (k == null) {
+            loginError = "Neispravno korisnicko ime i/ili lozinka.";
+            return null;
+        }
+
+        if (!k.getLozinka().equals(this.password)) {
+            loginError = "Neispravno korisnicko ime i/ili lozinka.";
+            return null;
+        }
+
+        korisnik = k;
+
+        if (korisnik.isAdmin()) {
+            return "admin?faces-redirect=true";
+        } else {
+            return "korisnik?faces-redirect=true";
+        }
     }
-    
+
     public String logout() {
-        return null;
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+            .getExternalContext().getSession(false);
+        session.invalidate();
+        return "index?faces-redirect=true";
     }
-    
+
     public String guest() {
         return null;
     }
-    
+
     public String register() {
         if (KorisnikManager.getKorisnikByUsername(noviKorisnik.getKorisnickoIme()) != null) {
             return null;
         }
-        
+
         KorisnikManager.addKorisnik(noviKorisnik);
         noviKorisnik = new Korisnik();
-        
+
         return "index";
+    }
+
+    public String userCheck() {
+        if (korisnik == null) {
+            return "index?faces-redirect=true";
+        } else if (korisnik.isAdmin()) {
+            return "admin/admin?faces-redirect=true";
+        } else {
+            return null;
+        }
+    }
+
+    public String adminCheck() {
+        if (korisnik == null) {
+            return "index?faces-redirect=true";
+        } else if (!korisnik.isAdmin()) {
+            return "korisnik?faces-redirect=true";
+        } else {
+            return null;
+        }
+    }
+
+    public String guestCheck() {
+        if (korisnik != null) {
+            if (!korisnik.isAdmin()) {
+                return "korisnik?faces-redirect=true";
+            } else {
+                return "korisnik?faces-redirect=true";
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     public Korisnik getKorisnik() {
@@ -90,6 +142,4 @@ public class AccountController {
         this.password = password;
     }
 
-    
-    
 }

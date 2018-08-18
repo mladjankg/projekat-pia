@@ -33,21 +33,19 @@ public abstract class Linija {
     @OrderColumn
     private List<Stanica> medjustanice;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderColumn
-    private List<Polazak> redVoznje;
+
     
     public Linija() {
         medjustanice = new ArrayList<Stanica>();
-        redVoznje = new ArrayList<Polazak>();
+       
         
     }
 
-    public Linija(Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice, List<Polazak> redVoznje) {
+    public Linija(Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice) {
         this.polaznaStanica = polaznaStanica;
         this.odredisnaStanica = odredisnaStanica;
         this.medjustanice = medjustanice;
-        this.redVoznje = redVoznje;
+        
     }
 
     
@@ -74,14 +72,6 @@ public abstract class Linija {
 
     public void setMedjustanice(List<Stanica> medjustanice) {
         this.medjustanice = medjustanice;
-    }
-
-    public List<Polazak> getRedVoznje() {
-        return redVoznje;
-    }
-
-    public void setRedVoznje(List<Polazak> redVoznje) {
-        this.redVoznje = redVoznje;
     }
     
     

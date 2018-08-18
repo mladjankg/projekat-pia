@@ -8,6 +8,7 @@ package beans;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,11 @@ public class MedjugradskaLinija extends Linija {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prevoznik_id")
     private Prevoznik prevoznik;
+    
+    @Column(name = "vreme_polaska")
     private Date vremePolaska;
+    
+    @Column(name = "vreme_dolaska")
     private Date vremeDolaska;
     
     @OneToOne(cascade = CascadeType.ALL)
@@ -38,13 +43,15 @@ public class MedjugradskaLinija extends Linija {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vozac_id")
     private Vozac vozac;
-
+    
+    @Column(name = "preostalo_mesta")
+    private Integer preostaloMesta;
     public MedjugradskaLinija() {
     }
 
     public MedjugradskaLinija(Prevoznik prevoznik, Date vremePolaska, Date vremeDolaska, Autobus autobus, Vozac vozac, 
-            Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice, List<Polazak> redVoznje) {
-        super(polaznaStanica, odredisnaStanica, medjustanice, redVoznje);
+            Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice) {
+        super(polaznaStanica, odredisnaStanica, medjustanice);
         this.prevoznik = prevoznik;
         this.vremePolaska = vremePolaska;
         this.vremeDolaska = vremeDolaska;
@@ -98,6 +105,14 @@ public class MedjugradskaLinija extends Linija {
 
     public void setVozac(Vozac vozac) {
         this.vozac = vozac;
+    }
+
+    public Integer getPreostaloMesta() {
+        return preostaloMesta;
+    }
+
+    public void setPreostaloMesta(Integer preostaloMesta) {
+        this.preostaloMesta = preostaloMesta;
     }
     
     

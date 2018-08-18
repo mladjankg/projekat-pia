@@ -10,12 +10,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
 /**
@@ -34,15 +33,20 @@ public class GradskaLinija extends Linija {
     @OneToMany
     private List<Vozac> vozaci;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gradskaLinija")
+    private List<Polazak> redVoznje;
+    
     public GradskaLinija() {
         super();
         vozaci = new ArrayList<Vozac>();
+        redVoznje = new ArrayList<Polazak>();
     }
 
     public GradskaLinija(Integer brojLinije, List<Vozac> vozaci, Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice, List<Polazak> redVoznje) {
-        super(polaznaStanica, odredisnaStanica, medjustanice, redVoznje);
+        super(polaznaStanica, odredisnaStanica, medjustanice);
         this.brojLinije = brojLinije;
         this.vozaci = vozaci;
+        this.redVoznje = redVoznje;
     } 
     
     public Integer getId() {
@@ -67,6 +71,14 @@ public class GradskaLinija extends Linija {
 
     public void setVozaci(List<Vozac> vozaci) {
         this.vozaci = vozaci;
+    }
+
+    public List<Polazak> getRedVoznje() {
+        return redVoznje;
+    }
+
+    public void setRedVoznje(List<Polazak> redVoznje) {
+        this.redVoznje = redVoznje;
     }
     
     

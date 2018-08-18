@@ -4,12 +4,15 @@
  */
 package utils;
 
+import beans.Autobus;
 import beans.GradskaLinija;
 import beans.Karta;
 import beans.KartaGradskiPrevoz;
 import beans.Korisnik;
+import beans.MedjugradskaLinija;
 import beans.Polazak;
 import beans.Poruka;
+import beans.Prevoznik;
 import beans.Stanica;
 import beans.Vozac;
 import java.io.File;
@@ -29,7 +32,10 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Vozac.class);
         configuration.addAnnotatedClass(Polazak.class);
         configuration.addAnnotatedClass(Stanica.class);
+        configuration.addAnnotatedClass(Autobus.class);
+        configuration.addAnnotatedClass(Prevoznik.class);
         configuration.addAnnotatedClass(GradskaLinija.class);
+        configuration.addAnnotatedClass(MedjugradskaLinija.class);
         configuration.addAnnotatedClass(Poruka.class);
         configuration.addAnnotatedClass(KartaGradskiPrevoz.class);
         configuration.addAnnotatedClass(Karta.class);

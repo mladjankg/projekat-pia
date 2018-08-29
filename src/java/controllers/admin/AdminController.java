@@ -1,17 +1,21 @@
-package controllers;
+package controllers.admin;
 
+import beans.GradskaLinija;
 import beans.Karta;
-import beans.KartaGradskiPrevoz;
 import beans.Korisnik;
 import beans.Poruka;
+import beans.Vozac;
 import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
+import controllers.AccountController;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 /*
  * Mladjan Mihajlovic 
@@ -27,7 +31,13 @@ public class AdminController {
 
     private List<Korisnik> zahteviZaRegistraciju;
     private List<Karta> zahteviZaRezervaciju;
-    private List<KartaGradskiPrevoz> zahteviZaKupovinu;
+    private List<Karta> zahteviZaKupovinu;
+    
+    private Vozac noviVozac;
+    private List<Vozac> vozaci;
+    
+    private GradskaLinija novaGradskaLinija;
+    private List<GradskaLinija> gradskeLinije;
     
     private int aktivanTab = 0;
 
@@ -38,6 +48,8 @@ public class AdminController {
         zahteviZaRegistraciju = new ArrayList<Korisnik>();
         zahteviZaRezervaciju = new ArrayList<>();
         zahteviZaKupovinu = new ArrayList<>();
+        vozaci = new ArrayList<>();
+        noviVozac = new Vozac();
     }
 
     public List<Korisnik> getZahteviZaRegistraciju() {
@@ -56,11 +68,11 @@ public class AdminController {
         this.zahteviZaRezervaciju = zahteviZaRezervaciju;
     }
 
-    public List<KartaGradskiPrevoz> getZahteviZaKupovinu() {
+    public List<Karta> getZahteviZaKupovinu() {
         return zahteviZaKupovinu;
     }
 
-    public void setZahteviZaKupovinu(List<KartaGradskiPrevoz> zahteviZaKupovinu) {
+    public void setZahteviZaKupovinu(List<Karta> zahteviZaKupovinu) {
         this.zahteviZaKupovinu = zahteviZaKupovinu;
     }
 
@@ -116,16 +128,16 @@ public class AdminController {
     }
 
     private void getZahteveZaRezervaciju() {
-        List<Karta> karte = (List<Karta>) BeanManager.getList("from karte where admin_potvrdio = false");
+        List<Karta> karte = (List<Karta>) BeanManager.getList("from karte where admin_potvrdio = false and tip=1");
         this.zahteviZaRezervaciju = karte;
     }
 
     private void getZahteveZaKupovinu() {
-        List<KartaGradskiPrevoz> karte = (List<KartaGradskiPrevoz>) BeanManager.getList("from gradske_karte where admin_potvrdio = false");
+        List<Karta> karte = (List<Karta>) BeanManager.getList("from karte where admin_potvrdio = false and tip=0");
         this.zahteviZaKupovinu = karte;
     }
     
-    public String obradiZahtevZaKupovinuKarte(KartaGradskiPrevoz k, boolean ishod) {
+    public String obradiZahtevZaKupovinuKarte(Karta k, boolean ishod) {
         k.setAdminPotvrdio(true);
         k.setOdobrena(ishod);
         BeanManager.updateBean(k);
@@ -141,6 +153,20 @@ public class AdminController {
         return null;
     } 
 
+    public String dodajVozaca() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (noviVozac == null) {
+            context.addMessage(null, new FacesMessage("Unsuccessfull", "Nije dodat vozac"));
+            return null;
+        }
+        
+        BeanManager.addBean(noviVozac);
+        vozaci.add(noviVozac);
+        noviVozac = new Vozac();
+        
+        return null;
+    }
+    
     public int getAktivanTab() {
         return aktivanTab;
     }
@@ -148,5 +174,38 @@ public class AdminController {
     public void setAktivanTab(int aktivanTab) {
         this.aktivanTab = aktivanTab;
     }
+
+    public Vozac getNoviVozac() {
+        return noviVozac;
+    }
+
+    public void setNoviVozac(Vozac noviVozac) {
+        this.noviVozac = noviVozac;
+    }
+
+    public List<Vozac> getVozaci() {
+        return vozaci;
+    }
+
+    public void setVozaci(List<Vozac> vozaci) {
+        this.vozaci = vozaci;
+    }
+
+    public GradskaLinija getNovaGradskaLinija() {
+        return novaGradskaLinija;
+    }
+
+    public void setNovaGradskaLinija(GradskaLinija novaGradskaLinija) {
+        this.novaGradskaLinija = novaGradskaLinija;
+    }
+
+    public List<GradskaLinija> getGradskeLinije() {
+        return gradskeLinije;
+    }
+
+    public void setGradskeLinije(List<GradskaLinija> gradskeLinije) {
+        this.gradskeLinije = gradskeLinije;
+    }
+    
     
 }

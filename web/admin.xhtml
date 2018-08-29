@@ -4,56 +4,37 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"    >
     <h:head>
         <title>Facelet Title</title>
         <f:metadata>
             <f:viewAction action="#{accountController.adminCheck}"/>
             <f:viewAction action="#{adminController.ucitajZahteve}"/>
         </f:metadata>
+        
+        <style type="text/css">
+            #forma_vozac {
+                float:left;
+                display:inline-block;
+            }
+        </style>
     </h:head>
     <h:body>
+        
         <div id="header">
             <ui:insert name="header">
                 <ui:include src="template/header.xhtml"/>
             </ui:insert>
         </div>
+        
+         
+        
         <p:tabView>
             <p:tab title="Zahtevi">
                 <p:tabView>
                     <p:tab title="Zahtevi za registraciju">
-                        <h:outputText value="Trenutno nema zahteva za registraciju." rendered="#{empty adminController.zahteviZaRegistraciju}"/>
-                        <h:form>
-                            <p:dataTable var="k" value="#{adminController.zahteviZaRegistraciju}" id="zahtevi_registracija" rendered="#{not empty adminController.zahteviZaRegistraciju}">
-                                <p:column headerText="Ime">
-                                    <h:outputText value="#{k.ime}"/>
-                                </p:column>
 
-                                <p:column headerText="Prezime">
-                                    <h:outputText value="#{k.prezime}"/>
-                                </p:column>
-
-                                <p:column headerText="Korisničko ime">
-                                    <h:outputText value="#{k.korisnickoIme}"/>
-                                </p:column>
-
-                                <p:column headerText="Datum rođenja">
-                                    <h:outputText value="#{k.datumRodjenja}"/>
-                                </p:column>
-
-                                <p:column headerText="Adresa">
-                                    <h:outputText value="#{k.adresa}"/>
-                                </p:column>
-
-                                <p:column>
-                                    <p:commandButton value="Odobri" update="zahtevi_registracija" action="#{adminController.odobriZahtev(k)}"/>
-                                </p:column>
-
-                                <p:column>
-                                    <p:commandButton value="Odbij" update="zahtevi_registracija" action="#{adminController.odbijZahtev(k)}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </h:form>
                     </p:tab>
                     <p:tab title="Zahtevi za kupovinu karata">
                         <h:outputText value="Trenutno nema zahteva za kupovinu karata." rendered="#{empty adminController.zahteviZaKupovinu}"/>
@@ -118,9 +99,40 @@
                 </p:tabView>
             </p:tab>
             <p:tab title="Gradske linije">
+                <p:tabView>
+                    <p:tab title="Linije">
+                    </p:tab>
+                    
+                    <p:tab title="Vozači">
+<!--                        <div id="forma_vozac">-->
+                            <h:form>
+                                <p:panelGrid columns="3" styleClass="form-panel-grid" >
+                                    <h:outputLabel for="ime" value="Ime:"/>
+                                    <h:inputText id="ime" value="#{adminController.noviVozac.ime}" required="true" requiredMessage="Obavezno polje." label="Ime"/>
+                                    <h:message for ="ime" style="color:red"/> 
 
+                                    <h:outputLabel for="prezime" value="Prezime:"/>
+                                    <h:inputText id="prezime" value="#{adminController.noviVozac.prezime}" required="true" requiredMessage="Obavezno polje." label="Prezime"/>
+                                    <h:message for ="prezime" style="color:red"/>
+
+                                    <h:outputLabel for="datumRodjenja" value="Datum rođenja:"/>
+                                    <p:calendar id="datumRodjenja" value="#{adminController.noviVozac.datumRodjenja}" navigator="true"/>
+                                    <h:message for ="datumRodjenja" style="color:red"/>
+                                    
+                                    <h:outputLabel for="pocetakVoznje" value="Početak vožnje:"/>
+                                    <p:calendar id="pocetakVoznje" value="#{adminController.noviVozac.pocetakVoznje}" navigator="true"/>
+                                    <h:message for ="pocetakVoznje" style="color:red"/>
+                                    
+                                    <p:commandButton value="Dodaj vozača" action="#{adminController.dodajVozaca()}"/>
+                                    
+                                </p:panelGrid>
+                            </h:form>
+
+<!--                        </div>-->
+                    </p:tab>                   
+                </p:tabView>
             </p:tab>
-            <p:tab title="Medjugradske linije">
+            <p:tab title="Međugradske linije">
 
             </p:tab>
         </p:tabView>

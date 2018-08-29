@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Facelet Title</title>
         <f:metadata>
@@ -16,7 +18,36 @@
                 <ui:include src="template/header.xhtml"/>
             </ui:insert>
         </div>
-        Hello from Facelets
+
+        <h:form id="karta_form">
+            <div id="gradska_karta_info">
+                 <p:panelGrid rendered="#{not empty accountController.korisnik.gradskaKarta}"  columns="2">
+                    <p:outputLabel for="kategorija" value="Kategorija:" />
+                    <h:outputText id="kategorija" value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
+
+                    <p:outputLabel for="vazi_do" value="Važi do:" rendered="#{accountController.korisnik.gradskaKarta.odobrena}"/>
+                    <h:outputText id="vazi_do" value="#{accountController.korisnik.gradskaKarta.datumVazenja}" rendered="#{accountController.korisnik.gradskaKarta.odobrena}">
+                        <f:convertDateTime pattern="dd-MM-yyyy"/>
+                    </h:outputText>
+                    <h:outputText rendered="#{not accountController.korisnik.gradskaKarta.adminPotvrdio}"  value="Kupovina još uvek nije odobrena."/>
+                </p:panelGrid>
+            </div>
+
+
+
+            <p:panelGrid columns="2" id="gradska_karta_form" rendered="#{empty accountController.korisnik.gradskaKarta}" >
+                <p:outputLabel  value="Kategorija:"/>
+                <h:outputText value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
+
+                <p:outputLabel  value="Tip:"/>
+                <p:outputLabel  rendered="#{accountController.korisnik.kategorijaZaposlenja.tip}" value="godišnja"/>
+                <p:outputLabel  rendered="#{not accountController.korisnik.kategorijaZaposlenja.tip}" value="mesečna"/>
+
+                <p:commandButton value="Naruči kartu za gradski prevoz" process="@form" update="karta_form">
+                    <p:ajax event="click" process="@form" update="karta_form" listener="#{korisnikViewController.naruciGradskuKartu}"/>
+                </p:commandButton>
+            </p:panelGrid>
+        </h:form>
     </h:body>
 </html>
 

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <f:metadata>
+            <f:viewAction action="#{accountController.adminCheck}"/>
+            <f:viewAction action="#{adminController.ucitajZahteve}"/>
+        </f:metadata>
+        <title>Busomanijak | Zahtevi za registraciju</title>
+    </h:head>
+    <h:body>
+        <div id="header">
+            <ui:insert name="header">
+                <ui:include src="template/header.xhtml"/>
+                <ui:include src="template/admin/admin_menu.xhtml"/>
+            </ui:insert>
+        </div>
+
+        <p:accordionPanel id="zahtevi_panel"  activeIndex="#{zahteviViewController.activeTab}">
+            <p:ajax event="tabChange" listener="#{zahteviViewController.onTabChange}"/>
+            <p:tab title="Zahtevi za registraciju" id="tab_0">
+                
+                <h:form>
+
+                    <h:outputText value="Trenutno nema zahteva za registraciju." rendered="#{empty adminController.zahteviZaRegistraciju}"/>
+                    <p:dataTable  var="k" value="#{adminController.zahteviZaRegistraciju}" rendered="#{not empty adminController.zahteviZaRegistraciju}">
+                        <p:column headerText="Ime">
+                            <h:outputText value="#{k.ime}"/>
+                        </p:column>
+
+                        <p:column headerText="Prezime">
+                            <h:outputText value="#{k.prezime}"/>
+                        </p:column>
+
+                        <p:column headerText="Korisničko ime">
+                            <h:outputText value="#{k.korisnickoIme}"/>
+                        </p:column>
+
+                        <p:column headerText="Datum rođenja">
+                            <h:outputText value="#{k.datumRodjenja}"/>
+                        </p:column>
+
+                        <p:column headerText="Adresa">
+                            <h:outputText value="#{k.adresa}"/>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton value="Odobri" update=":zahtevi_panel" action="#{adminController.odobriZahtev(k)}"/>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton value="Odbij" update=":zahtevi_panel" action="#{adminController.odbijZahtev(k)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:tab>
+            <p:tab title="Zahtevi za kupovinu gradskih karata" id="tab_1">
+                <h:form>
+                    <h:outputText value="Trenutno nema zahteva za kupovinu gradskih karata." rendered="#{empty adminController.zahteviZaKupovinu}"/>
+                    <p:dataTable value="#{adminController.zahteviZaKupovinu}" var="zk" rendered="#{not empty adminController.zahteviZaKupovinu}">
+                        <p:column headerText="Kupac">
+                            <h:outputText value="#{zk.korisnik.ime} #{zk.korisnik.prezime}"/>
+                        </p:column>
+                       
+                        <p:column headerText="Kategorija">
+                            <h:outputText value="#{zk.korisnik.kategorijaZaposlenja.naziv}"/>
+                        </p:column>
+                     
+                        <p:column headerText="Cena">
+                            <h:outputText value="#{zk.korisnik.kategorijaZaposlenja.cenaKarte}"/>
+                        </p:column>
+                   
+                        <p:column>
+                            <p:commandButton value="Odobri" update=":zahtevi_panel" action="#{zahteviViewController.odobriZahtevZaKupovinu(zk)}"/>
+                        </p:column>
+                    
+                        <p:column>
+                            <p:commandButton value="Odbij" update=":zahtevi_panel" action="#{zahteviViewController.odbijZahtevZaKupovinu(zk)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:tab>
+        </p:accordionPanel>
+
+    </h:body>
+</html>
+

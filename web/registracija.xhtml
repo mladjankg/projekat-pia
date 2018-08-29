@@ -59,13 +59,8 @@
                         <h:message for ="telefon" style="color:red"/>
 
                         <h:outputLabel for="kategorijaZaposlenja" value="Kategorija zaposlenja"/>
-                        <h:selectOneRadio id="kategorijaZaposlenja" required="true" requiredMessage="Obavezno polje." value="#{accountController.noviKorisnik.kategorijaZaposlenjaInteger}" label="Kategorija zaposlenja">
-                            <f:selectItem itemValue = "0" itemLabel="Nezaposlen"/>
-                            <f:selectItem itemValue = "1" itemLabel="Zaposlen"/>
-                            <f:selectItem itemValue = "2" itemLabel="Student"/>
-                            <f:selectItem itemValue = "3" itemLabel="Lice sa invaliditetom"/>
-                            <f:selectItem itemValue = "4" itemLabel="Penzioner"/>
-
+                        <h:selectOneRadio id="kategorijaZaposlenja" required="true" requiredMessage="Obavezno polje." value="#{accountController.noviKorisnik.kategorijaZaposlenja}" label="Kategorija zaposlenja" converter="kategorijaZaposlenjaConverter">
+                            <f:selectItems value="#{registrationViewController.kategorije}" var="kat" itemLabel="#{kat.naziv}" itemValue="#{kat}" />
                         </h:selectOneRadio>
                         <h:message for ="kategorijaZaposlenja" style="color:red"/>
 

@@ -4,6 +4,7 @@
  */
 package beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,13 +37,27 @@ public class Karta {
 
     private Boolean odobrena;
     
-    @Column(name = "datum_rezervacije")
-    private Date datumRezervacije;
+    @Column(name = "datum_kupovine")
+    private Date datumKupovine;
+    
+    @Column(name = "datum_vazenja")
+    private Date datumVazenja;
     
     @Column(name = "admin_potvrdio")
     private Boolean adminPotvrdio;
     
+    private Boolean tip; // 0 - gradski, 1 - medjugradski
+    
     public Karta() {
+    }
+
+    public Karta(Korisnik korisnik, Date datumKupovine, Boolean tip) {
+        this.korisnik = korisnik;
+        this.datumKupovine = datumKupovine;
+        this.tip = tip;
+        this.datumVazenja = null;
+        this.adminPotvrdio = false;
+        this.linija = null;
     }
 
     
@@ -86,13 +101,43 @@ public class Karta {
         this.adminPotvrdio = adminPotvrdio;
     }
 
-    public Date getDatumRezervacije() {
-        return datumRezervacije;
+
+    public Boolean getTip() {
+        return tip;
     }
 
-    public void setDatumRezervacije(Date datumRezervacije) {
-        this.datumRezervacije = datumRezervacije;
+    public void setTip(Boolean tip) {
+        this.tip = tip;
     }
 
+    public Date getDatumKupovine() {
+        return datumKupovine;
+    }
+
+    public void setDatumKupovine(Date datumKupovine) {
+        this.datumKupovine = datumKupovine;
+    }
+
+    public Date getDatumVazenja() {
+        return datumVazenja;
+    }
+
+    public void setDatumVazenja(Date datumVazenja) {
+        this.datumVazenja = datumVazenja;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Kategorija korisnika: ").append(this.korisnik.getKategorijaZaposlenja().getNaziv()).append("\n")
+            .append("Tip karte: ").append((this.korisnik.getKategorijaZaposlenja().isTip() ? "godišnja\n" : "mesečna\n"))
+            .append("Cena karte: ").append(this.korisnik.getKategorijaZaposlenja().getCenaKarte());   
+        if (this.datumVazenja != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            sb.append("\nVaži do: ").append(sdf.format(datumVazenja));
+        }
+        return sb.toString();
+    }
     
 }

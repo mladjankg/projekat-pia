@@ -5,7 +5,6 @@
  */
 package beans;
 
-import enums.KategorijaZaposlenja;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -35,7 +35,8 @@ public class Korisnik {
     private String ime;
     private String prezime;
     
-    @Column(name = "korisnicko_ime")
+    
+    @Column(name = "korisnicko_ime", unique = true)
     private String korisnickoIme;
     private String lozinka;
     
@@ -47,12 +48,11 @@ public class Korisnik {
     private Date datumRodjenja;
     private String telefon;
     
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "kategorija_zaposlenja")
-    private KategorijaZaposlenja kategorijaZaposlenja;
+
+    @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "kategorija_zaposlenja")
     
-    @Transient
-    private Integer kategorijaZaposlenjaInteger;
+    private KategorijaZaposlenja kategorijaZaposlenja;
     
     private String mejl;
     private boolean admin;
@@ -66,19 +66,19 @@ public class Korisnik {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "korisnik")
     private List<Poruka> poruke = new ArrayList<Poruka>();
     
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "korisnik")
-    private KartaGradskiPrevoz gradskaKarta;
+    @Transient
+    private Karta gradskaKarta;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "korisnik")
     private List<Karta> karte = new ArrayList<Karta>();
     
-    private static final String[] kategorije = new String[] {"zaposlen", "nezaposlen", "student", "lice sa invaliditetom", "penzioner"};
-    
     public Korisnik() {
         poruke = new ArrayList<Poruka>();
+        kategorijaZaposlenja = new KategorijaZaposlenja();
     }
 
-    public Korisnik(String ime, String prezime, String korisnickoIme, String lozinka, String potvrdaLozinke, String adresa, Date datumRodjenja, String telefon, KategorijaZaposlenja kategorijaZaposlenja, String mejl, boolean admin) {
+    public Korisnik(Integer id, String ime, String prezime, String korisnickoIme, String lozinka, String potvrdaLozinke, String adresa, Date datumRodjenja, String telefon, KategorijaZaposlenja kategorijaZaposlenja, String mejl, boolean admin, boolean adminPotvrdio, boolean korisnikValidan, Karta gradskaKarta) {
+        this.id = id;
         this.ime = ime;
         this.prezime = prezime;
         this.korisnickoIme = korisnickoIme;
@@ -90,20 +90,11 @@ public class Korisnik {
         this.kategorijaZaposlenja = kategorijaZaposlenja;
         this.mejl = mejl;
         this.admin = admin;
+        this.adminPotvrdio = adminPotvrdio;
+        this.korisnikValidan = korisnikValidan;
+        this.gradskaKarta = gradskaKarta;
     }
 
-    public Korisnik(String ime, String prezime, String korisnickoIme, String lozinka, String adresa, Date datumRodjenja, String telefon, KategorijaZaposlenja kategorijaZaposlenja, String mejl, Boolean admin) {
-        this.ime = ime;
-        this.prezime = prezime;
-        this.korisnickoIme = korisnickoIme;
-        this.lozinka = lozinka;
-        this.adresa = adresa;
-        this.datumRodjenja = datumRodjenja;
-        this.telefon = telefon;
-        this.kategorijaZaposlenja = kategorijaZaposlenja;
-        this.mejl = mejl;
-        this.admin = admin;
-    }
 
     
     public Integer getId() {
@@ -227,39 +218,6 @@ public class Korisnik {
         this.poruke = poruke;
     }
 
-    public Integer getKategorijaZaposlenjaInteger() {
-        return kategorijaZaposlenjaInteger;
-    }
-
-    public void setKategorijaZaposlenjaInteger(Integer kategorijaZaposlenjaInteger) {
-        switch(kategorijaZaposlenjaInteger) {
-            case 0:
-                this.kategorijaZaposlenja = KategorijaZaposlenja.NEZAPOSLEN;
-                break;
-            case 1:
-                this.kategorijaZaposlenja = KategorijaZaposlenja.ZAPOSLEN;
-                break;
-            case 2:
-                this.kategorijaZaposlenja = KategorijaZaposlenja.STUDENT;
-                break;
-            case 3:
-                this.kategorijaZaposlenja = KategorijaZaposlenja.LICE_SA_INVALIDITETOM;
-                break;
-            case 4:
-                this.kategorijaZaposlenja = KategorijaZaposlenja.PENZIONER;
-                break;
-        }
-        this.kategorijaZaposlenjaInteger = kategorijaZaposlenjaInteger;
-    }
-
-    public KartaGradskiPrevoz getGradskaKarta() {
-        return gradskaKarta;
-    }
-
-    public void setGradskaKarta(KartaGradskiPrevoz gradskaKarta) {
-        this.gradskaKarta = gradskaKarta;
-    }
-
     public List<Karta> getKarte() {
         return karte;
     }
@@ -267,10 +225,14 @@ public class Korisnik {
     public void setKarte(List<Karta> karte) {
         this.karte = karte;
     }
-    
-    
-    public String getKategorijaZaposlenjaString() {
-        return kategorije[kategorijaZaposlenja.ordinal()];
+
+    public Karta getGradskaKarta() {
+        return gradskaKarta;
     }
+
+    public void setGradskaKarta(Karta gradskaKarta) {
+        this.gradskaKarta = gradskaKarta;
+    }
+    
     
 }

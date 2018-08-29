@@ -4,6 +4,7 @@
  */
 package beans.managers;
 
+import beans.Karta;
 import beans.Korisnik;
 import beans.Poruka;
 import java.util.List;
@@ -132,5 +133,29 @@ public class BeanManager {
         }
         
         return list;
+    }
+    
+    public static Object getObject(String queryString) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Object o = null;
+        
+        try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery(queryString);
+            o = hqlQuery.setMaxResults(1).getSingleResult();
+            tx.commit();
+        } catch (NoResultException | HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+           // ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+        
+        return o;
     }
 }

@@ -4,9 +4,13 @@
  */
 package controllers;
 
+import beans.Karta;
 import beans.Korisnik;
+import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -49,8 +53,19 @@ public class AccountController {
         korisnik = k;
 
         if (korisnik.isAdmin()) {
-            return "admin?faces-redirect=true";
+            return "zahtevi?faces-redirect=true";
         } else {
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 59);
+            Date today = c.getTime();
+            Object o = BeanManager.getObject("from karte where tip=0 and korisnik_id=" + korisnik.getId().toString());
+            Karta karta = null;
+            if (o != null) {
+                karta = (Karta)o;
+            }
+            korisnik.setGradskaKarta(karta);
             return "korisnik?faces-redirect=true";
         }
     }

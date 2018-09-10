@@ -71,7 +71,7 @@
                         </p:column>
                      
                         <p:column headerText="Cena">
-                            <h:outputText value="#{zk.korisnik.kategorijaZaposlenja.cenaKarte}"/>
+                            <h:outputText value="#{zk.cena}"/>
                         </p:column>
                    
                         <p:column>
@@ -82,6 +82,12 @@
                             <p:commandButton value="Odbij" update=":zahtevi_panel" action="#{zahteviViewController.odbijZahtevZaKupovinu(zk)}"/>
                         </p:column>
                     </p:dataTable>
+                </h:form>
+            </p:tab>
+            <p:tab title="Zahtevi za registraciju medjugradskih karata." id="tab_2">
+                <h:form>
+                    <h:outputText value="Trenutno nema zahteva za rezervaciju medjugradskih karata." rendered="#{empty adminController.zahteviZaRezervaciju}" />
+                    <h:outputText value="Nije implementirano jos uvek" rendered="#{not empty adminController.zahteviZaRezervaciju}" />
                 </h:form>
             </p:tab>
         </p:accordionPanel>

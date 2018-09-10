@@ -9,6 +9,7 @@ import beans.Korisnik;
 import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.faces.bean.ManagedBean;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean(name = "accountController")
 @SessionScoped
-public class AccountController {
+public class AccountController implements Serializable {
 
     private Korisnik korisnik;
     private Korisnik noviKorisnik;

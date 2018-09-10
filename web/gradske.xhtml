@@ -2,15 +2,153 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <f:metadata>
+            <f:viewAction action="#{accountController.adminCheck}"/>
+
+        </f:metadata>
+        <title>Busomanijak | Zahtevi za registraciju</title>
     </h:head>
     <h:body>
-        <ui:insert name="header">
-            <ui:include src="template/header.xhtml"/>
-            <ui:include src="template/admin/admin_menu.xhtml"/>
-        </ui:insert>
+        <div id="header">
+            <ui:insert name="header">
+                <ui:include src="template/header.xhtml"/>
+                <ui:include src="template/admin/admin_menu.xhtml"/>
+            </ui:insert>
+        </div>
+
+        <p:accordionPanel id="gradske_panel" activeIndex="#{gradskeViewController.activeTab}">
+            <p:ajax event="tabChange" listener="#{gradskeViewController.onTabChange}"/>
+            <p:tab title="Pregled linija" id="tab_0">
+                <p:dataTable value="#{gradskeViewController.linije}" var="l">
+                    <p:column headerText="Broj linije">
+                        <h:outputText value="#{l.brojLinije}"/>
+                    </p:column>
+
+                    <p:column headerText="Terminus A">
+                        <h:outputText value="#{l.polaznaStanica.naziv}"/>
+                    </p:column>
+
+                    <p:column headerText="Terminus B">
+                        <h:outputText value="#{l.odredisnaStanica.naziv}"/>
+                    </p:column>
+
+                    <p:column headerText="Stanje">
+                        <h:outputText value="Otkazana do #{l.otkazanaDoString}." rendered="#{not l.aktivna}"/>
+                        <h:outputText value="Aktivna" rendered="#{l.aktivna}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <div style="padding-top: 15px">
+                    <h:form id="otkazivanje_linije">
+                        <h3>Otkaži liniju</h3>
+                        <p:panelGrid columns="4">
+                            <p:outputLabel for="drop_linije" value="Linija: "/>
+
+                            <p:selectOneMenu id="drop_linije" value="#{gradskeViewController.brojOtkazaneLinije}">
+                                <f:selectItems value="#{gradskeViewController.neotkazaneLinije}" var="l" itemLabel="#{l.brojLinije}" itemValue="#{l.brojLinije}"/>
+                            </p:selectOneMenu>    
+
+                            <p:outputLabel for="period_otkazivanja" value="Otkazi do:"/>
+
+                            <p:calendar id="period_otkazivanja" mindate="#{gradskeViewController.sutra}" value="#{gradskeViewController.periodOtkazivanja}" required="true"/>
+                            <p:commandButton action="#{gradskeViewController.otkaziLiniju}" update=":gradske_panel" value="Otkazi"/>
+                        </p:panelGrid>
+                        <p:growl for="otkazivanje_linije"/>
+                    </h:form>
+                </div>
+            </p:tab>
+
+            <p:tab title="Dodavanje liinje" id="tab_1">
+                <div style="padding-top: 15px">  
+                    <h:form id="dodavanje_linije">
+                        <p:growl id="growl" showDetail="false" sticky="true" for="dodavanje_linije"/> 
+                        <p:panelGrid columns="2">
+
+                            <p:outputLabel for="broj_linije" value="Broj linije:" />
+                            <p:inputText id="broj_linije" value="#{gradskeViewController.novaLinija.brojLinije}" required="true"/>
+
+
+                            <p:outputLabel for="vozaci" value="Vozači:" />
+                            <p:selectManyMenu id="vozaci" 
+                                              value="#{gradskeViewController.novaLinija.vozaci}" 
+                                              required="true" converter="vozacConverter" 
+                                              rendered="#{not empty gradskeViewController.vozaci}">
+                                <f:selectItems value="#{gradskeViewController.vozaci}" var="v" itemLabel="#{v.ime} #{v.prezime}" itemValue="#{v}"/>
+                            </p:selectManyMenu>
+                            <h:outputText value="Trenutno nema slobodnih vozača." rendered="#{empty gradskeViewController.vozaci}"/>
+
+                            <p:outputLabel for="medjustanice" value="Međustanice"/>
+                            <p:pickList id="medjustanice" value="#{gradskeViewController.medjustanice}" var="st" itemValue="#{st}" itemLabel="#{st}" converter="stanicaConverter"/>
+
+                            <p:panel style="border:none;padding:0;margin:0">
+                                <p:calendar  value="#{gradskeViewController.vremePolaska}" pattern="HH:mm" timeOnly="true" id="vreme_polaska" size="14">
+                                   <p:ajax event="dateSelect" listener="#{gradskeViewController.onDateSelect}"  />
+                                </p:calendar>
+                                <br/>
+                                <p:commandButton value="Dodaj polazak" >
+                                    <p:ajax event="click" 
+                                            update="polasci"
+                                            listener="#{gradskeViewController.dodajPolazak}" 
+                                            />
+                                </p:commandButton>
+                            </p:panel>
+                            
+                            <p:panel id="polasci">
+                                <p:dataList value="#{gradskeViewController.novaLinija.redVoznje}" var="p" rendered="#{not empty gradskeViewController.novaLinija.redVoznje}">
+                                    <f:facet name="header">Polasci</f:facet>
+                                    <h:outputText value="#{p.vremePolaska}">
+                                        <f:convertDateTime pattern="HH:mm"/>
+                                    </h:outputText>
+                                </p:dataList>
+                                <h:outputText value="Nije dodat ni jedan polazak." rendered="#{empty gradskeViewController.novaLinija.redVoznje}"/>
+                            </p:panel>
+                            <p:commandButton value="Dodaj liniju" update=":gradske_panel" action="#{gradskeViewController.dodajLiniju}"/>
+                        </p:panelGrid>
+                    </h:form>
+                </div>
+            </p:tab>
+
+            <p:tab title="Dodavanje vozača" id="tab_2">
+                <h:form>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="ime_vozaca" value="Ime:"/>
+                        <p:inputText id="ime_vozaca" value="#{gradskeViewController.noviVozac.ime}" required="true"/>
+
+                        <p:outputLabel for="prezime_vozaca" value="Prezime:"/>
+                        <p:inputText id="prezime_vozaca" value="#{gradskeViewController.noviVozac.prezime}" required="true"/>
+
+                        <p:outputLabel for="datum_rodjenja_vozaca" value="Datum rođenja:"/>
+                        <p:calendar 
+                            id="datum_rodjenja_vozaca" 
+                            navigator="true"
+                            value="#{gradskeViewController.noviVozac.datumRodjenja}" 
+                            maxdate="#{gradskeViewController.maxDatumRodjenjaVozaca}"
+                            required="true" 
+
+                            pattern="yyyy-MM-dd">
+                            <p:ajax event="dateSelect"  process="@this" listener="#{gradskeViewController.promenaDatuma}" update="pocetak_voznje_vozaca"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="pocetak_voznje_vozaca" value="Početak vožnje:"/>
+                        <p:calendar 
+                            id="pocetak_voznje_vozaca" 
+                            navigator="true" 
+                            value="#{gradskeViewController.noviVozac.pocetakVoznje}" 
+                            mindate="#{gradskeViewController.minDatumPocetakVoznje}"
+                            maxdate="#{gradskeViewController.danas}"
+                            required="true" 
+                            pattern="yyyy-MM-dd" />
+
+                        
+                        <p:commandButton value="Dodaj vozača" update=":gradske_panel" action="#{gradskeViewController.dodajVozaca}"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:tab>
+        </p:accordionPanel>
     </h:body>
 </html>
 

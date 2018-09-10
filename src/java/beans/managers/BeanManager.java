@@ -89,6 +89,26 @@ public class BeanManager {
             session.close();
         }
     }
+        public static void updateList(List l) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(Object o: l) {
+                session.update(o);
+            }
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
     public static void deleteBean(Class beanClass, Integer id) {
         SessionFactory factory = HibernateUtil.getSessionFactory();

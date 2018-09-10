@@ -59,7 +59,7 @@ public class KategorijaZaposlenjaConverter implements Converter {
                 return (KategorijaZaposlenja)o;
             }
         } catch (NumberFormatException e) {
-            throw new ConverterException(new FacesMessage(submittedValue + " is not a valid Warehouse ID"), e);
+            throw new ConverterException(new FacesMessage(submittedValue + " is not a valid Kategorija zaposlenja ID"), e);
         }
     }
 

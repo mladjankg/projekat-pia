@@ -7,6 +7,7 @@ package controllers.admin;
 import beans.Karta;
 import beans.Poruka;
 import beans.managers.BeanManager;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
@@ -21,7 +22,7 @@ import org.primefaces.event.TabChangeEvent;
  */
 @ManagedBean(name = "zahteviViewController")
 @ViewScoped
-public class ZahteviViewController {
+public class ZahteviViewController implements Serializable {
 
     @ManagedProperty(value = "#{adminController}")
     private AdminController adminController;

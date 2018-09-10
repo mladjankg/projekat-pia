@@ -6,6 +6,8 @@
 package beans;
 
 import enums.TipStanice;
+import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,28 +21,36 @@ import javax.persistence.Id;
  * @author Mlađan
  */
 @Entity(name = "stanice")
-public class Stanica {
+public class Stanica implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
    
     private String naziv;
     
-    @Enumerated(EnumType.ORDINAL)
     @Column(name = "tip_stanice")
-    private TipStanice tipStanice;
+    private Integer tipStanice;
 
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     
     public Stanica() {
     }
 
-    public Stanica(String naziv, TipStanice tipStanice) {
+    public Stanica(String naziv, Integer tipStanice) {
         this.naziv = naziv;
         this.tipStanice = tipStanice;
     }
 
+    public Stanica(Integer id, String naziv, Integer tipStanice, Double latitude, Double longitude) {
+        this.id = id;
+        this.naziv = naziv;
+        this.tipStanice = tipStanice;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    
     public Integer getId() {
         return id;
     }
@@ -57,29 +67,60 @@ public class Stanica {
         this.naziv = naziv;
     }
 
-    public TipStanice getTipStanice() {
+    public Integer getTipStanice() {
         return tipStanice;
     }
 
-    public void setTipStanice(TipStanice tipStanice) {
+    public void setTipStanice(Integer tipStanice) {
         this.tipStanice = tipStanice;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Stanica other = (Stanica) obj;
+        if (!Objects.equals(this.naziv, other.naziv)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
     
+    @Override
+    public String toString() {
+        return this.id + " " + naziv;
+    }
     
 }

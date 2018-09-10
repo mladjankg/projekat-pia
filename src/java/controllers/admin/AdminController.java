@@ -8,6 +8,7 @@ import beans.Vozac;
 import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
 import controllers.AccountController;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -27,7 +28,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name = "adminController")
 @SessionScoped
-public class AdminController {
+public class AdminController implements Serializable {
 
     private List<Korisnik> zahteviZaRegistraciju;
     private List<Karta> zahteviZaRezervaciju;

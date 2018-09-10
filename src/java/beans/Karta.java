@@ -4,6 +4,7 @@
  */
 package beans;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.CascadeType;
@@ -22,7 +23,7 @@ import javax.persistence.OneToOne;
  * @author Mlađan
  */
 @Entity(name = "karte")
-public class Karta {
+public class Karta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -48,6 +49,8 @@ public class Karta {
     
     private Boolean tip; // 0 - gradski, 1 - medjugradski
     
+    private Integer cena;
+    
     public Karta() {
     }
 
@@ -58,8 +61,20 @@ public class Karta {
         this.datumVazenja = null;
         this.adminPotvrdio = false;
         this.linija = null;
+        this.cena = 0;
     }
 
+    public Karta(Korisnik korisnik, Date datumKupovine, Boolean tip, Integer cena) {
+        this.korisnik = korisnik;
+        this.datumKupovine = datumKupovine;
+        this.tip = tip;
+        this.cena = cena;
+        this.datumVazenja = null;
+        this.adminPotvrdio = false;
+        this.linija = null;
+    }
+
+    
     
     public Integer getId() {
         return id;
@@ -126,6 +141,14 @@ public class Karta {
         this.datumVazenja = datumVazenja;
     }
 
+    public Integer getCena() {
+        return cena;
+    }
+
+    public void setCena(Integer cena) {
+        this.cena = cena;
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

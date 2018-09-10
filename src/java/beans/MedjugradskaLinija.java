@@ -22,9 +22,6 @@ import javax.persistence.OneToOne;
  */
 @Entity(name = "medjugradska_linija")
 public class MedjugradskaLinija extends Linija {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prevoznik_id")
@@ -57,14 +54,6 @@ public class MedjugradskaLinija extends Linija {
         this.vremeDolaska = vremeDolaska;
         this.autobus = autobus;
         this.vozac = vozac;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Prevoznik getPrevoznik() {

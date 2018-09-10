@@ -37,7 +37,7 @@ public class KorisnikViewController {
     public void naruciGradskuKartu() {
         Calendar c = Calendar.getInstance();
         Date today = c.getTime();
-        Karta k = new Karta(accountController.getKorisnik(), today, false);
+        Karta k = new Karta(accountController.getKorisnik(), today, false, accountController.getKorisnik().getKategorijaZaposlenja().getCenaKarte());
         
         accountController.getKorisnik().setGradskaKarta(k);
         BeanManager.addBean(k);

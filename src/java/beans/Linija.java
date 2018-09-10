@@ -9,7 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -19,8 +25,14 @@ import javax.persistence.OrderColumn;
  *
  * @author Mlađan
  */
-@MappedSuperclass
+
+@Inheritance(strategy = InheritanceType.JOINED)
+@Entity(name = "linije")
 public abstract class Linija {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+        
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "polazna_stanica_id")
     private Stanica polaznaStanica;
@@ -29,7 +41,7 @@ public abstract class Linija {
     @JoinColumn(name = "odredisna_stanica_id")
     private Stanica odredisnaStanica;
     
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Stanica> medjustanice;
 

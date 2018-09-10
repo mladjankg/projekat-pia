@@ -6,6 +6,7 @@
 package beans;
 
 import java.time.LocalTime;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class Polazak {
     private Integer id;
 
     @Column(name = "vreme_polaska")
-    private LocalTime vremePolaska;
+    private Date vremePolaska;
 
     private Boolean smer;
 
@@ -47,11 +48,11 @@ public class Polazak {
         this.id = id;
     }
 
-    public LocalTime getVremePolaska() {
+    public Date getVremePolaska() {
         return vremePolaska;
     }
 
-    public void setVremePolaska(LocalTime vremePolaska) {
+    public void setVremePolaska(Date vremePolaska) {
         this.vremePolaska = vremePolaska;
     }
 

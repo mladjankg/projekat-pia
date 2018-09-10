@@ -1,6 +1,7 @@
 package beans;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ import javax.persistence.ManyToOne;
  * @author Mlađan
  */
 @Entity(name = "poruke")
-public class Poruka {
+public class Poruka implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -4,6 +4,7 @@
  */
 package beans;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ import javax.persistence.Id;
  * @author Mlađan
  */
 @Entity(name = "kategorije_zaposlenja")
-public class KategorijaZaposlenja {
+public class KategorijaZaposlenja implements Serializable {
     @Id
     private String naziv;
     private int cenaKarte;

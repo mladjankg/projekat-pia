@@ -5,20 +5,24 @@
  */
 package beans;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
  * @author Mlađan
  */
 @Entity(name = "vozaci")
-public class Vozac {
+public class Vozac implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -31,14 +35,21 @@ public class Vozac {
     @Column(name = "pocetak_voznje")
     private Date pocetakVoznje;
 
+    private Integer tip; // 0 - vozi gradske linije, 1 - vozi medjugradske linije
+    
+    @ManyToOne
+    @JoinColumn(name = "gradska_linija_id")
+    private GradskaLinija gradskaLinija;
+       
     public Vozac() {
     }
 
-    public Vozac(String ime, String prezime, Date datumRodjenja, Date pocetakVoznje) {
+    public Vozac(String ime, String prezime, Date datumRodjenja, Date pocetakVoznje, Integer tip) {
         this.ime = ime;
         this.prezime = prezime;
         this.datumRodjenja = datumRodjenja;
         this.pocetakVoznje = pocetakVoznje;
+        this.tip = tip;
     }
 
     public Integer getId() {
@@ -80,6 +91,23 @@ public class Vozac {
     public void setPocetakVoznje(Date pocetakVoznje) {
         this.pocetakVoznje = pocetakVoznje;
     }
+
+    public Integer getTip() {
+        return tip;
+    }
+
+    public void setTip(Integer tip) {
+        this.tip = tip;
+    }
+
+    public GradskaLinija getGradskaLinija() {
+        return gradskaLinija;
+    }
+
+    public void setGradskaLinija(GradskaLinija gradskaLinija) {
+        this.gradskaLinija = gradskaLinija;
+    }
+    
     
     public int getGodineIskustva() {
         Calendar calendar = Calendar.getInstance();
@@ -89,4 +117,33 @@ public class Vozac {
         
         return currentYear - year;
     }
+
+
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vozac other = (Vozac) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
 }

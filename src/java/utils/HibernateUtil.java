@@ -9,6 +9,7 @@ import beans.GradskaLinija;
 import beans.Karta;
 import beans.KategorijaZaposlenja;
 import beans.Korisnik;
+import beans.Linija;
 import beans.MedjugradskaLinija;
 import beans.Polazak;
 import beans.Poruka;
@@ -34,11 +35,13 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Stanica.class);
         configuration.addAnnotatedClass(Autobus.class);
         configuration.addAnnotatedClass(Prevoznik.class);
+        configuration.addAnnotatedClass(Linija.class);
         configuration.addAnnotatedClass(GradskaLinija.class);
         configuration.addAnnotatedClass(MedjugradskaLinija.class);
         configuration.addAnnotatedClass(Poruka.class);
         configuration.addAnnotatedClass(Karta.class);
         configuration.addAnnotatedClass(KategorijaZaposlenja.class);
+
        // try {
         sessionFactory = configuration.configure().buildSessionFactory();
         //}

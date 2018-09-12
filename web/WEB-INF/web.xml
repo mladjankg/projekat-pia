@@ -7,6 +7,10 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>redmond</param-value>
+    </context-param>
+    <context-param>
+        <param-name>upload.location</param-name>
+        <param-value>D:\Upload</param-value>
     </context-param>    
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -25,4 +29,9 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <filter>
+        <filter-name>PrimeFaces Upload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class> 
+    </filter>
+
 </web-app>

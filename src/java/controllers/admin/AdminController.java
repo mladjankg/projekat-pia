@@ -3,6 +3,7 @@ package controllers.admin;
 import beans.GradskaLinija;
 import beans.Karta;
 import beans.Korisnik;
+import beans.MedjugradskaLinija;
 import beans.Poruka;
 import beans.Vozac;
 import beans.managers.BeanManager;
@@ -39,6 +40,8 @@ public class AdminController implements Serializable {
     
     private GradskaLinija novaGradskaLinija;
     private List<GradskaLinija> gradskeLinije;
+    
+    private MedjugradskaLinija medjugradskaLinijaPrikazDetalja;
     
     private int aktivanTab = 0;
 

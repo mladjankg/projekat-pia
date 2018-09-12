@@ -22,7 +22,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.primefaces.event.SelectEvent;
@@ -63,15 +62,6 @@ public class ManageGradskeLinijeViewController implements Serializable {
 
     private Date vremePolaska;
 
-//    private int id;
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
     private DualListModel<Stanica> medjustanice;
 
     public ManageGradskeLinijeViewController() {
@@ -409,4 +399,6 @@ public class ManageGradskeLinijeViewController implements Serializable {
 
         this.vremePolaska = (Date) event.getObject();
     }
+    
+
 }

@@ -12,6 +12,7 @@ import beans.Korisnik;
 import beans.Linija;
 import beans.MedjugradskaLinija;
 import beans.Polazak;
+import beans.PolazakMedjugradska;
 import beans.Poruka;
 import beans.Prevoznik;
 import beans.Stanica;
@@ -41,6 +42,7 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Poruka.class);
         configuration.addAnnotatedClass(Karta.class);
         configuration.addAnnotatedClass(KategorijaZaposlenja.class);
+        configuration.addAnnotatedClass(PolazakMedjugradska.class);
 
        // try {
         sessionFactory = configuration.configure().buildSessionFactory();

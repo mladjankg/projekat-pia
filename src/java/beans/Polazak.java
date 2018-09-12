@@ -5,6 +5,7 @@
  */
 package beans;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Date;
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import javax.persistence.ManyToOne;
  * @author Mlađan
  */
 @Entity(name = "red_voznje")
-public class Polazak {
+public class Polazak implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

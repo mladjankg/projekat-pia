@@ -6,6 +6,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -78,6 +79,32 @@ public class Prevoznik implements Serializable {
 
     public void setLogoURL(String logoURL) {
         this.logoURL = logoURL;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.id);
+        hash = 83 * hash + Objects.hashCode(this.naziv);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Prevoznik other = (Prevoznik) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
     
     

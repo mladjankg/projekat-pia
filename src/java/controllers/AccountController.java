@@ -118,7 +118,7 @@ public class AccountController implements Serializable {
             if (!korisnik.isAdmin()) {
                 return "korisnik?faces-redirect=true";
             } else {
-                return "korisnik?faces-redirect=true";
+                return "zahtevi?faces-redirect=true";
             }
         }
         else {

@@ -72,7 +72,5 @@ public class Polazak implements Serializable {
     public void setGradskaLinija(GradskaLinija gradskaLinija) {
         this.gradskaLinija = gradskaLinija;
     }
-
-    
     
 }

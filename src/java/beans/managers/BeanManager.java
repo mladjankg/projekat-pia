@@ -22,7 +22,6 @@ import utils.HibernateUtil;
  */
 public class BeanManager {
 
-    
     public static Object getBean(Class beanClass, Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
@@ -31,7 +30,7 @@ public class BeanManager {
         Object object = null;
         try {
             tx = session.beginTransaction();
-            object = session.get(beanClass, id);            
+            object = session.get(beanClass, id);
             tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
@@ -44,7 +43,7 @@ public class BeanManager {
 
         return object;
     }
-    
+
     public static Integer addBean(Object o) {
         if (o == null) {
             return null;
@@ -57,7 +56,7 @@ public class BeanManager {
 
         try {
             tx = session.beginTransaction();
-            beanId = (Integer) session.save(o);            
+            beanId = (Integer) session.save(o);
             tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
@@ -89,13 +88,14 @@ public class BeanManager {
             session.close();
         }
     }
-        public static void updateList(List l) {
+
+    public static void updateList(List l) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for(Object o: l) {
+            for (Object o : l) {
                 session.update(o);
             }
             tx.commit();
@@ -130,13 +130,13 @@ public class BeanManager {
             session.close();
         }
     }
-    
+
     public static List getList(String queryString) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
         List list = null;
-        
+
         try {
             tx = session.beginTransaction();
             Query hqlQuery = session.createQuery(queryString);
@@ -151,16 +151,16 @@ public class BeanManager {
         } finally {
             session.close();
         }
-        
+
         return list;
     }
-    
+
     public static Object getObject(String queryString) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
         Object o = null;
-        
+
         try {
             tx = session.beginTransaction();
             Query hqlQuery = session.createQuery(queryString);
@@ -171,11 +171,11 @@ public class BeanManager {
                 tx.rollback();
             }
 
-           // ex.printStackTrace();
+            // ex.printStackTrace();
         } finally {
             session.close();
         }
-        
+
         return o;
     }
 }

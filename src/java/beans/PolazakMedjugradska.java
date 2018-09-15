@@ -38,18 +38,18 @@ public class PolazakMedjugradska implements Serializable {
     @Column(name = "vreme_dolaska")
     private Date vremeDolaska;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "autobus_id")
     private Autobus autobus;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vozac_id")
     private Vozac vozac;
     
     @Column(name = "preostalo_mesta")
     private Integer preostaloMesta;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "medjugradska_linija_id", nullable = false)
     private MedjugradskaLinija medjugradskaLinija;
     
@@ -110,5 +110,5 @@ public class PolazakMedjugradska implements Serializable {
         this.medjugradskaLinija = medjugradskaLinija;
     }
     
-    
+
 }

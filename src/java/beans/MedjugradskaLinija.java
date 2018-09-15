@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -29,7 +30,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Entity(name = "medjugradske_linije")
 public class MedjugradskaLinija extends Linija implements Serializable {
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prevoznik_id")
     private Prevoznik prevoznik;
     

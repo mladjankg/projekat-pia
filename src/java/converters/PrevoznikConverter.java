@@ -29,6 +29,10 @@ public class PrevoznikConverter implements Converter {
             }
 
             int id = Integer.parseInt(string);
+            if (id == 0) {
+                return null; //Placeholder object
+            }
+            
             Object o = BeanManager.getObject("from prevoznici where id=" + id);
             if (o == null) {
                 return null;

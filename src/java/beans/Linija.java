@@ -7,6 +7,7 @@ package beans;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,10 +17,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -43,6 +44,7 @@ public abstract class Linija {
     
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Stanica> medjustanice;
 
 
@@ -60,6 +62,13 @@ public abstract class Linija {
         
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     
     
     public Stanica getPolaznaStanica() {
@@ -84,6 +93,30 @@ public abstract class Linija {
 
     public void setMedjustanice(List<Stanica> medjustanice) {
         this.medjustanice = medjustanice;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Linija other = (Linija) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
     
     

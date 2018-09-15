@@ -38,19 +38,6 @@ VALUES
 (false, true, 'Bana Ivanisa 5, Beograd', '1987-12=31', 'Milos', 'zaposlen', 'milosbg', true, 'losmi11', 'losmi.bg@gmail.com', 'Radojkovic', '0641352665'),
 (false, false, 'Nikole Pasica 22, Kragujevac', '1974-04-16', 'Ivana', 'nezaposlen', 'iki74', false, 'mafin95', 'ivana.karovic@yahoo.com', 'Karovic', '0638482164');
 
-INSERT INTO `autobusi`
-(`broj_mesta`,
-`marka`,
-`model`,
-`slike`)
-VALUES
-(57, 'Mercedes', 'InterBus 234', null),
-(97, 'Ikarbus', 'I753', null),
-(76, 'Man', 'D523', null),
-(42, 'Mercedes', 'InterBus 428', null),
-(23, 'Vulovic', 'V9', null),
-(33, 'Man', 'D772', null);
-
 INSERT INTO `prevoznici`
 (`adresa`,
 `logo_url`,
@@ -60,6 +47,23 @@ VALUES
 ('Zorana Djindjica 27, Zemun', null, 'Unacop', '011425774'),
 ('Mihaila Gavrilovica 4, Kragujevac', null, 'Janjusevic', '034821552'),
 ('Autoput za Nis bb, Beograd', null, 'Lasta', '011421850');
+
+INSERT INTO `autobusi`
+(`broj_mesta`,
+`marka`,
+`model`,
+`slike`,
+`prevoznik_id`,
+`registracija`)
+VALUES
+(57, 'Mercedes', 'InterBus 234', null, 1, 'KG-123-HJ'),
+(97, 'Ikarbus', 'I753', null, 2, 'BG-042-LF'),
+(76, 'Man', 'D523', null, 3, 'NS-078-MP'),
+(42, 'Mercedes', 'InterBus 428', null, 1, 'KG-012-ER'),
+(23, 'Vulovic', 'V9', null, 2, 'BG-638-KZ'),
+(33, 'Man', 'D772', null, 3, 'PB-026-IS');
+
+
 
 INSERT INTO `stanice`
 (`naziv`, `tip_stanice`)
@@ -103,7 +107,10 @@ INSERT INTO `linije`
 VALUES
 (9,1),
 (10, 16),
-(18, 17);
+(18, 17),
+(17, 27),
+(18, 20),
+(17, 18);
 
 INSERT INTO `gradske_linije`
 (`broj_linije`, `aktivna`, `id`)
@@ -118,23 +125,32 @@ INSERT INTO `vozaci`
 `pocetak_voznje`,
 `prezime`,
 `tip`,
-`gradska_linija_id`)
+`gradska_linija_id`,
+`prevoznik`)
 VALUES
-('1974-10-03', 'Mirko', '1999-03-29', 'Vasiljevic', 0, 1),
-('1984-02-28', 'Vasilije', '2004-03-29', 'Dobrilovic', 0, null),
-('1990-06-09', 'Dragan', '2015-08-17', 'Markovic', 1, null),
-('1963-10-03', 'Dragoljub', '1987-03-29', 'Simonovic',0, 2);
+('1974-10-03', 'Mirko', '1999-03-29', 'Vasiljevic', 0, 1, null),
+('1984-02-28', 'Vasilije', '2004-03-29', 'Dobrilovic', 0, null, null),
+('1990-06-09', 'Dragan', '2015-08-17', 'Markovic', 1, null, 1),
+('1963-10-03', 'Dragoljub', '1987-03-29', 'Simonovic',0, 2, null),
+('1960-11-01', 'Zivorad', '1985-08-17', 'Mihajlovic', 1, null, 2),
+('1972-03-17', 'Marko', '2091-12-02', 'Dragutinovic', 1, null, 3),
+('1981-10-25', 'Radenko', '2004-01-29', 'Bajic', 1, null, 1);
 
 
 INSERT INTO `medjugradske_linije`
 (`id`,`prevoznik_id`)
 VALUES
-(3, 1);
+(3, 1),
+(4, 2),
+(5, 3),
+(6, 2);
 
 INSERT INTO `linije_stanice`
 (`linije_id`, `medjustanice_id`, `medjustanice_ORDER`)
 VALUES
-(3, 25, 0);
+(3, 25, 0),
+(4, 19, 0),
+(5, 26, 1);
 
 INSERT INTO `red_voznje`
 (`smer`, `vreme_polaska`, `gradska_linija_id`)
@@ -160,10 +176,11 @@ VALUES
 (false, '16:30', 2),
 (false, '19:05', 2);
 
-INSERT INTO `prodaja_karata`.`medjugradske_polasci`
+INSERT INTO `medjugradske_polasci`
 (`preostalo_mesta`, `vreme_dolaska`, `vreme_polaska`, `autobus_id`, `medjugradska_linija_id`, `vozac_id`)
 VALUES
 (55, '2018-09-23 23:00', '2018-09-23 21:00', 1, 3, 3);
+
 
 INSERT INTO `karte`
 (
@@ -178,3 +195,4 @@ VALUES
 
 (false, '2018-08-18', null, false, 0, 2, null),
 (false, '2018-08-17', null, false, 0, 3, null);
+

@@ -4,8 +4,8 @@
  */
 package converters;
 
-import beans.KategorijaZaposlenja;
-import beans.Stanica;
+import beans.Autobus;
+import beans.Prevoznik;
 import beans.managers.BeanManager;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -18,8 +18,8 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Mlađan
  */
-@FacesConverter("stanicaConverter")
-public class StanicaConverter implements Converter {
+@FacesConverter("autobusConverter")
+public class AutobusConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String string) {
@@ -27,24 +27,17 @@ public class StanicaConverter implements Converter {
             if (string == null) {
                 return null;
             }
-            
+
             int id = Integer.parseInt(string);
-            
-            //Difoltna stanica, treba da se vrati null. Ova stanica sluzi za prikazivanje na web-u.
-            if (id == 0) {
-                return null;
-            }
-            
-            Object o = BeanManager.getObject("from stanice where id=" + id);
+            Object o = BeanManager.getObject("from autobusi where id=" + id);
             if (o == null) {
                 return null;
-            }
-            else {
-                return (Stanica)o;
+            } else {
+                return o;
             }
         } catch (NumberFormatException e) {
-            throw new ConverterException(new FacesMessage(string + " ne predstavlja ID stanice."), e);
-        }   
+            throw new ConverterException(new FacesMessage(string + " ne predstavlja ID autobusa."), e);
+        }
     }
 
     @Override
@@ -53,10 +46,10 @@ public class StanicaConverter implements Converter {
             return "";
         }
 
-        if (modelValue instanceof Stanica) {
-            return ((Stanica) modelValue).getId().toString();
+        if (modelValue instanceof Autobus) {
+            return ((Autobus) modelValue).getId().toString();
         } else {
-            throw new ConverterException(new FacesMessage(modelValue + " nije validan objekat tipa Stanica."));
+            throw new ConverterException(new FacesMessage(modelValue + " nije validan objekat tipa Autobus."));
         }
     }
     

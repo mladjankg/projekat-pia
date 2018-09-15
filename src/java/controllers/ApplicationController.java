@@ -34,6 +34,14 @@ public class ApplicationController {
     public void shutdown() {
         // ...
     }
+
+    private String visibleName = "BUSOMANIJAK";
+
+    public String getVisibleName() {
+        return visibleName;
+    }
+
+    
     
     private Calendar getCalendarWithoutTime() {
         Calendar c = Calendar.getInstance();

@@ -6,6 +6,7 @@ package controllers.admin;
 
 import beans.Autobus;
 import beans.MedjugradskaLinija;
+import beans.PolazakMedjugradska;
 import beans.Prevoznik;
 import beans.Stanica;
 import beans.Vozac;
@@ -40,7 +41,6 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class ManageMedjugradskeLinijeViewController implements Serializable {
 
-
     class FileContents implements Serializable {
 
         public FileContents(byte[] content, String fileName) {
@@ -56,7 +56,7 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
     private DualListModel<Stanica> medjustanice;
     private List<Stanica> stanice;
-    
+
     private List<Vozac> vozaci;
     private List<MedjugradskaLinija> linije;
 
@@ -76,12 +76,14 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
     private int stepsIndex;
     private MedjugradskaLinija novaLinija;
 
-    private boolean pregledDetalja;
-    
+    private PolazakMedjugradska noviPolazak;
+    private int polazakStepsIndex;
+    private Prevoznik izabraniPrevoznik;
+
     public ManageMedjugradskeLinijeViewController() {
         this.autobusi = new ArrayList<>();
         this.prevoznici = new ArrayList<>();
-        
+
         this.stepsIndex = 0;
         this.activeTab = "0";
         this.noviVozac = new Vozac();
@@ -95,11 +97,15 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         this.medjustanice = new DualListModel<>(new ArrayList<>(), new ArrayList<>());
         this.stanice = new ArrayList<>();
         this.novaLinija = new MedjugradskaLinija();
+        this.noviPolazak = new PolazakMedjugradska();
     }
 
     @PostConstruct
     public void init() {
         this.linije = BeanManager.getList("from medjugradske_linije");
+        this.prevoznici = BeanManager.getList("from prevoznici");
+        this.autobusi = BeanManager.getList("from autobusi");
+        this.vozaci = BeanManager.getList("from vozaci where tip=1");
         Date sad = Calendar.getInstance().getTime();
 
     }
@@ -194,9 +200,9 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
     public DualListModel<Stanica> getMedjustanice() {
         List<Stanica> source = stanice.stream()
-                .filter( s -> 
-                        !s.equals(this.novaLinija.getPolaznaStanica()) && 
-                        !s.equals(this.novaLinija.getOdredisnaStanica()))
+                .filter(s
+                        -> !s.equals(this.novaLinija.getPolaznaStanica())
+                && !s.equals(this.novaLinija.getOdredisnaStanica()))
                 .collect(toList());
         medjustanice.setSource(source);
         return medjustanice;
@@ -213,34 +219,134 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
     public List<Stanica> getOdredisneStanice() {
         if (this.novaLinija.getPolaznaStanica() == null) {
             return stanice;
-        }
-        else {
+        } else {
             return this.stanice.stream().filter(s -> !s.equals(this.novaLinija.getPolaznaStanica())).collect(toList());
         }
     }
-    
+
     public void setStanice(List<Stanica> stanice) {
         this.stanice = stanice;
     }
 
-    public boolean isPregledDetalja() {
-        return pregledDetalja;
+    public PolazakMedjugradska getNoviPolazak() {
+        return noviPolazak;
     }
 
-    public void setPregledDetalja(boolean pregledDetalja) {
-        this.pregledDetalja = pregledDetalja;
+    public void setNoviPolazak(PolazakMedjugradska noviPolazak) {
+        this.noviPolazak = noviPolazak;
     }
-    
-    
-  
+
+    public int getPolazakStepsIndex() {
+        return polazakStepsIndex;
+    }
+
+    public void setPolazakStepsIndex(int polazakStepsIndex) {
+        this.polazakStepsIndex = polazakStepsIndex;
+    }
+
+    public Prevoznik getIzabraniPrevoznik() {
+        return izabraniPrevoznik;
+    }
+
+    public void setIzabraniPrevoznik(Prevoznik izabraniPrevoznik) {
+        this.izabraniPrevoznik = izabraniPrevoznik;
+    }
+
+    public List<MedjugradskaLinija> getLinijePrevoznika() {
+        if (this.izabraniPrevoznik == null) {
+            return new ArrayList<>();
+        }
+        return linije.stream().filter(f -> f.getPrevoznik().equals(this.izabraniPrevoznik)).collect(toList());
+    }
+
+    public List<Autobus> getDostupniAutobusi() {
+        if (this.izabraniPrevoznik == null
+                || this.noviPolazak == null
+                || this.noviPolazak.getMedjugradskaLinija() == null
+                || this.noviPolazak.getVremeDolaska() == null
+                || this.noviPolazak.getVremePolaska() == null) {
+            return null;
+        }
+
+        List<Autobus> l = this.autobusi
+                .stream()
+                .filter(a
+                        -> this.noviPolazak.getMedjugradskaLinija().getPrevoznik().equals(a.getPrevoznik()))
+                .collect(toList());
+
+        l = l.stream()
+                .filter((a) -> {
+                    Autobus au = (Autobus) a;
+                    if (au.getPolasci() == null || au.getPolasci().isEmpty()) {
+                        return true;
+                    } else {
+                        for (PolazakMedjugradska p : au.getPolasci()) {
+                            if (!((this.noviPolazak.getVremeDolaska().before(p.getVremePolaska())
+                                    && (this.noviPolazak.getVremePolaska().before(p.getVremePolaska())))
+                                    || ((this.noviPolazak.getVremeDolaska().after(p.getVremeDolaska()))
+                                    && (this.noviPolazak.getVremePolaska().after(p.getVremeDolaska()))))) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                })
+                .collect(toList());
+        return l;
+    }
+
+    public List<Vozac> getDostupniVozaci() {
+        if (this.izabraniPrevoznik == null
+                || this.noviPolazak == null
+                || this.noviPolazak.getMedjugradskaLinija() == null) {
+            return null;
+        }
+
+        List<Vozac> l = this.vozaci
+                .stream()
+                .filter(a
+                        -> this.noviPolazak.getMedjugradskaLinija().getPrevoznik().equals(a.getPrevoznik()))
+                .collect(toList());
+
+        l = l.stream()
+                .filter((a) -> {
+                    Vozac v = (Vozac) a;
+                    if (v.getPolasci() == null || v.getPolasci().isEmpty()) {
+                        return true;
+                    } else {
+                        for (PolazakMedjugradska p : v.getPolasci()) {
+                            if (!((this.noviPolazak.getVremeDolaska().before(p.getVremePolaska())
+                                    && (this.noviPolazak.getVremePolaska().before(p.getVremePolaska())))
+                                    || ((this.noviPolazak.getVremeDolaska().after(p.getVremeDolaska()))
+                                    && (this.noviPolazak.getVremePolaska().after(p.getVremeDolaska()))))) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                })
+                .collect(toList());
+        return l;
+    }
+
     public void sledeci() {
         ++this.stepsIndex;
     }
-    
+
     public void prethodni() {
         --this.stepsIndex;
     }
-    
+
+    public void sledeciKorakPolazak() {
+        ++this.polazakStepsIndex;
+    }
+
+    public void prethodniKorakPolazak() {
+        --this.polazakStepsIndex;
+    }
+
     //Metoda za menjanje taba na view-u
     public void onTabChange(TabChangeEvent event) {
         switch (event.getTab().getId()) {
@@ -249,14 +355,13 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
                 break;
             case "tab_1":
                 this.activeTab = "1";
-                this.prevoznici = BeanManager.getList("from prevoznici");
+
                 this.stanice = BeanManager.getList("from stanice where tip_stanice=1");
                 List<Stanica> dlm = new ArrayList<>();
                 dlm.addAll(this.stanice);
                 this.medjustanice = new DualListModel<>(dlm, new ArrayList<>());
                 break;
             case "tab_2":
-                this.prevoznici = BeanManager.getList("from prevoznici");
                 this.activeTab = "2";
                 break;
             case "tab_3":
@@ -269,6 +374,22 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
                 this.activeTab = "0";
                 break;
         }
+    }
+
+    public void dodajPolazak() {
+        Integer id = BeanManager.addBean(this.noviPolazak);
+
+        if (id == null) {
+            //TODO: Add message.
+            return;
+        }
+
+        this.noviPolazak.getMedjugradskaLinija().getPolasci().add(this.noviPolazak);
+        this.noviPolazak.getVozac().getPolasci().add(this.noviPolazak);
+        this.noviPolazak.getAutobus().getPolasci().add(this.noviPolazak);
+        this.noviPolazak = new PolazakMedjugradska();
+        this.izabraniPrevoznik = null;
+        this.polazakStepsIndex = 0;
     }
 
     public void dodajVozaca() {
@@ -292,10 +413,10 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
     }
 
     /**
-    * Metoda koja osluskuje kada se promeni datum u kalendaru za unos datuma rodjenja 
-    * u formi za dodavanje novog vozaca. Setuje ogranicenja u kalendaru za
-    * izbor datuma pocetka voznje vozaca.
-    */
+     * Metoda koja osluskuje kada se promeni datum u kalendaru za unos datuma
+     * rodjenja u formi za dodavanje novog vozaca. Setuje ogranicenja u
+     * kalendaru za izbor datuma pocetka voznje vozaca.
+     */
     public void promenaDatuma() {
         Calendar c = Calendar.getInstance();
         c.setTime(noviVozac.getDatumRodjenja());
@@ -303,13 +424,26 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         minDatumPocetakVoznje = c.getTime();
     }
 
-    
+    public void promenaDatumaPolazak() {
+        if (this.noviPolazak.getVremeDolaska() == null) {
+            return;
+        }
+
+        if (this.noviPolazak.getVremeDolaska().before(this.noviPolazak.getVremePolaska())) {
+            this.noviPolazak.setVremeDolaska(null);
+        }
+    }
+
+    public void promenaDatumaDolazak() {
+
+    }
+
     public void dodajAutobus() {
 
         StringBuilder sb = new StringBuilder();
 
         String uploadLocation = this.getUploadLocation();
-        
+
         //Dodeljivanje novih imena slikama i cuvanje slika na serveru.
         for (FileContents file : this.slikeAutobusa) {
             String serverName = this.getServerFileName(file.fileName);
@@ -355,24 +489,24 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
             this.noviPrevoznik.setLogoURL(serverName);
         }
         Integer id = BeanManager.addBean(this.noviPrevoznik);
-        
+
         if (id == null) {
             //TODO: Manage error
             return;
         }
-        
+
         this.prevoznici.add(this.noviPrevoznik);
         this.noviPrevoznik = new Prevoznik();
         this.logoPrevoznika = null;
-        
+
         FacesContext.getCurrentInstance().addMessage(":medjugradske_panel:dodavanje_prevoznika:dodavanje_prevoznika_poruka", new FacesMessage(FacesMessage.SEVERITY_WARN, "Prevoznik uspesno dodat.", ""));
     }
 
     public void dodajLiniju() {
-        
+
         //TODO: Dodaj proveru da li je vec dodata stanica sa istom pocetnom i krajnjom i istim prevoznikom.
         Integer id = BeanManager.addBean(this.novaLinija);
-        
+
         if (id == null) {
             return;
         }
@@ -381,7 +515,7 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         this.medjustanice = new DualListModel<>(new ArrayList<>(), new ArrayList<>());
         this.stepsIndex = 0;
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getFile();
         byte[] content = file.getContents();
@@ -406,13 +540,13 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
         return serverName;
     }
-    
+
     private String getUploadLocation() {
         String uploadLocation = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("upload.location");
         if (!uploadLocation.endsWith(File.separator)) {
             uploadLocation += File.separator;
         }
-        
+
         return uploadLocation;
     }
 }

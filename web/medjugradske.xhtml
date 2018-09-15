@@ -18,123 +18,57 @@
                 <ui:include src="template/admin/admin_menu.xhtml"/>
             </ui:insert>
         </div>
+        <p:dataTable value="#{medjugradskeView.linije}" var="mg" id="medjugradske_pregled">
+            <p:column headerText="Polaziste">
+                <h:outputText value="#{mg.polaznaStanica.naziv}" style="color:#{mg.color}"/>
+            </p:column> 
 
-        <p:accordionPanel id="medjugradske_panel" activeIndex="#{medjugradskeView.activeTab}">
+            <p:column headerText="Odrediste">
+                <h:outputText value="#{mg.odredisnaStanica.naziv}" style="color:#{mg.color}"/>
+            </p:column>
+
+            <p:column headerText="Prevoznik">
+                <h:outputText value="#{mg.prevoznik.naziv}" style="color:#{mg.color}"/>
+            </p:column>
+
+            <p:column headerText="">
+                <p:commandButton id="pregled_polazaka" value="Polasci"/>
+                <p:overlayPanel id="polasciPanel" for="pregled_polazaka" hideEffect="fade" dynamic="true" style="width:600px">
+                    <p:dataTable var="p" value="#{mg.polasci}" rows="5" paginator="true">
+                        <p:column headerText="Polazak">
+                            <h:outputText value="#{p.vremePolaska}">
+
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Dolazak">
+                            <h:outputText value="#{p.vremeDolaska}">
+
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Vozač">
+                            <h:outputText value="#{p.vozac.ime} #{p.vozac.prezime}"/>
+                        </p:column>
+                        <p:column headerText="Autobus">
+                            <h:outputText value="#{p.autobus.marka} #{p.autobus.model}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:overlayPanel>
+            </p:column>
+        </p:dataTable>
+
+        <p:accordionPanel id="medjugradske_panel" activeIndex="#{medjugradskeView.activeTab}" style="padding-top: 20px">
             <p:ajax event="tabChange" listener="#{medjugradskeView.onTabChange}"/>
-            <p:tab title="Pregled linija" id="tab_0">
-                <p:dataTable value="#{medjugradskeView.linije}" var="mg">
-                    <p:column headerText="Polaziste">
-                        <h:outputText value="#{mg.polaznaStanica.naziv}" style="color:#{mg.color}"/>
-                    </p:column> 
 
-                    <p:column headerText="Odrediste">
-                        <h:outputText value="#{mg.odredisnaStanica.naziv}" style="color:#{mg.color}"/>
-                    </p:column>
-
-                    <p:column headerText="Prevoznik">
-                        <h:outputText value="#{mg.prevoznik.naziv}" style="color:#{mg.color}"/>
-                    </p:column>
-                    
-                    <p:column headerText="">
-                        <p:commandButton id="pregled_polazaka" value="Polasci"/>
-                        <p:overlayPanel id="polasciPanel" for="pregled_polazaka" hideEffect="fade" dynamic="true" style="width:600px">
-                            <p:dataTable var="p" value="#{mg.polasci}" rows="5" paginator="true">
-                                <p:column headerText="Polazak">
-                                    <h:outputText value="#{p.vremePolaska}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:overlayPanel>
-                    </p:column>
-                </p:dataTable>
-                
-              
+            <p:tab title="Dodavanje polaska" id="tab_0">
+                <ui:insert>
+                    <ui:include src="template/admin/dodavanje_medjugradskog_polaska.xhtml"/>
+                </ui:insert>
             </p:tab>
 
             <p:tab title="Dodavanje linije" id="tab_1">
-
-                <p:steps activeIndex="#{medjugradskeView.stepsIndex}">
-                    <p:menuitem value="Prevoznik" />
-                    <p:menuitem value="Početna stanica" />
-                    <p:menuitem value="Odredišna stanica" />
-                    <p:menuitem value="Međustanice" />
-                    <p:menuitem value="Potvrda" />
-                </p:steps>
-
-                <h:form rendered="#{medjugradskeView.stepsIndex == 0}" >
-                    <p:panelGrid columns="2">
-                        <p:outputLabel for="prevoznik_linije" value="Prevoznik:"/>
-                        <p:selectOneMenu id="prevoznik_linije" value="#{medjugradskeView.novaLinija.prevoznik}" converter="prevoznikConverter">
-                            <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemLabel="#{p.naziv}" itemValue="#{p}"/>
-                        </p:selectOneMenu>
-                    </p:panelGrid>
-                    <p:commandButton value="Sledeci korak" action="#{medjugradskeView.sledeci()}" update=":medjugradske_panel"/>
-                </h:form>
-
-                <h:form rendered="#{medjugradskeView.stepsIndex == 1}" >
-                    <p:panelGrid columns="2">
-                        <p:outputLabel for="pocetna_stanica" value="Početna stanica"/>
-                        <p:selectOneMenu id="pocetna_stanica" value="#{medjugradskeView.novaLinija.polaznaStanica}" converter="stanicaConverter" >
-                            <f:selectItems 
-                                value="#{medjugradskeView.stanice}" 
-                                var="s" 
-                                itemLabel="#{s.naziv}" 
-                                itemValue="#{s}" />
-
-                        </p:selectOneMenu>
-                         <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodni}" process="@this" update=":medjugradske_panel"/>
-                        <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeci}" update=":medjugradske_panel"/>
-                    </p:panelGrid>
-                </h:form>
-
-                <h:form rendered="#{medjugradskeView.stepsIndex == 2}">
-                    <p:panelGrid columns="2">
-                        <p:outputLabel for="odredisna_stanica" value="Odredišna stanica"/>
-                        <p:selectOneMenu id="odredisna_stanica" value="#{medjugradskeView.novaLinija.odredisnaStanica}" converter="stanicaConverter" >
-                            <f:selectItems value="#{medjugradskeView.odredisneStanice}" 
-                                           var="s" 
-                                           itemLabel="#{s.naziv}" 
-                                           itemValue="#{s}"/>
-                        </p:selectOneMenu>
-                        <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodni}" process="@this" update=":medjugradske_panel"/>
-                        <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeci}" update=":medjugradske_panel"/>
-                    </p:panelGrid>
-                </h:form>
-
-                <h:form rendered="#{medjugradskeView.stepsIndex == 3}" >
-                    <p:panelGrid columns="2">
-                        <p:outputLabel for="medjustanice" value="Medjustanice:"/>
-                        <p:pickList id="medjustanice" 
-                                    value="#{medjugradskeView.medjustanice}" 
-                                    var="st" itemValue="#{st}" 
-                                    itemLabel="#{st}" 
-                                    converter="stanicaConverter"/>
-                         <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodni}" process="@this" update=":medjugradske_panel"/>
-                        <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeci}" update=":medjugradske_panel"/>
-                    </p:panelGrid>
-                   
-                </h:form>
-
-                <h:form rendered="#{medjugradskeView.stepsIndex == 4}" >                  
-                    <p:panelGrid columns="2">
-                        <p:outputLabel for="odabrani_prevoznik" value="Prevoznik:"/>
-                        <h:outputText id="odabrani_prevoznik" value="#{medjugradskeView.novaLinija.prevoznik.naziv}"/>
-                        
-                        <p:outputLabel for="odabrana_pocetna_stanica" value="Početna stanica:"/>
-                        <h:outputText id="odabrana_pocetna_stanica" value="#{medjugradskeView.novaLinija.polaznaStanica.naziv}"/>
-                        
-                        <p:outputLabel for="odabrana_odredisna_stanica" value="Odredišna stanica:"/>
-                        <h:outputText id="odabrana_odredisna_stanica" value="#{medjugradskeView.novaLinija.odredisnaStanica.naziv}"/>
-                        
-                        <p:outputLabel for="medjustanice" value="Međustanice:"/>
-                        <p:dataList value="#{medjugradskeView.medjustanice.target}" var="ms" id="medjustanice" rendered="#{not empty medjugradskeView.medjustanice.target}">
-                            <h:outputText value="#{ms.naziv}"/>
-                        </p:dataList>
-                        <h:outputText value="Linija nema međustanica" rendered="#{empty medjugradskeView.medjustanice.target}"/>
-                        
-                        <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodni}" update=":medjugradske_panel" process="@this"/>
-                        <p:commandButton value="Potvrdi" actionListener="#{medjugradskeView.dodajLiniju}" update=":medjugradske_panel"/>
-                    </p:panelGrid>
-                </h:form>
+                <ui:insert>
+                    <ui:include src="template/admin/dodavanje_medjugradske_linije.xhtml"/>
+                </ui:insert>
             </p:tab>
 
             <p:tab title="Dodavanje prevoznika" id="tab_2">
@@ -199,8 +133,11 @@
                             required="true" 
                             pattern="yyyy-MM-dd" />
 
-
-                        <p:commandButton value="Dodaj vozača" update=":medjugradske_panel" actionListener="#{medjugradskeView.dodajVozaca}"/>
+                        <p:outputLabel for="prevoznik_vozaca" value="Prevoznik:"/>
+                        <p:selectOneMenu id="prevoznik_vozaca" value="#{medjugradskeView.noviVozac.prevoznik}" converter="prevoznikConverter" rendered="#{not empty medjugradskeView.prevoznici}">
+                            <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemValue="#{p}" itemLabel="#{p.naziv}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Dodaj vozača" update=":medjugradske_panel" actionListener="#{medjugradskeView.dodajVozaca}" disabled="#{empty medjugradskeView.prevoznici}"/>
                     </p:panelGrid>
                 </h:form>
 
@@ -218,10 +155,18 @@
                         <p:outputLabel for="broj_mesta" value="Broj mesta:"/>
                         <p:inputNumber id="broj_mesta" value="#{medjugradskeView.noviAutobus.brojMesta}" required="true"/>
 
+                        <p:outputLabel for="registracija" value="Registracija:"/>
+                        <p:inputText id="registracija" value="#{medjugradskeView.noviAutobus.registracija}" required="true"/>
+                        
+                        <p:outputLabel for="prevoznik_autobusa" value="Prevoznik:"/>
+                        <p:selectOneMenu id="prevoznik_autobusa" value="#{medjugradskeView.noviAutobus.prevoznik}" converter="prevoznikConverter" rendered="#{not empty medjugradskeView.prevoznici}">
+                            <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemValue="#{p}" itemLabel="#{p.naziv}"/>
+                        </p:selectOneMenu>
+                        
                         <p:fileUpload fileUploadListener="#{medjugradskeView.handleFileUpload}" mode="advanced" dragDropSupport="false"
                                       multiple="true"  fileLimit="5" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
 
-                        <p:commandButton value="Dodaj autobus" actionListener="#{medjugradskeView.dodajAutobus}"/>
+                        <p:commandButton value="Dodaj autobus" actionListener="#{medjugradskeView.dodajAutobus}" update=":medjugradske_panel" disabled="#{empty medjugradskeView.prevoznici}"/>
                     </p:panelGrid>
 
                 </h:form>

@@ -107,5 +107,11 @@ public class Prevoznik implements Serializable {
         return true;
     }
     
-    
+    public static Prevoznik getPlaceholder() {
+        Prevoznik p = new Prevoznik();
+        p.setId(0);
+        p.setNaziv("");
+        
+        return p;
+    }
 }

@@ -6,6 +6,7 @@ package controllers;
 
 import beans.KategorijaZaposlenja;
 import beans.managers.BeanManager;
+import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -16,7 +17,7 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean(name = "registrationViewController")
 @ViewScoped
-public class RegistrationViewController {
+public class RegistrationViewController implements Serializable {
     private List<KategorijaZaposlenja> kategorije;
     
     public RegistrationViewController() {

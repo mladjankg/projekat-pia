@@ -120,4 +120,9 @@ public class Stanica implements Serializable {
         return this.id + " " + naziv;
     }
     
+    public static Stanica getEmpty() {
+        Stanica s = new Stanica("", null);
+        s.setId(0);
+        return s;
+    }
 }

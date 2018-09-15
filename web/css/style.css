@@ -6,7 +6,21 @@ Programiranje internet aplikacija | Elektrotehnicki fakultet | Avgust 2018
     Created on : Aug 12, 2018, 1:56:33 PM
     Author     : Mlađan
 */
-.form-panel-grid {
-    border-style:none;
+
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    margin-bottom: 10px;
 }
 
+.center-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+}

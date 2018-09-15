@@ -6,8 +6,10 @@
 package beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -40,6 +45,14 @@ public class Vozac implements Serializable {
     @ManyToOne
     @JoinColumn(name = "gradska_linija_id")
     private GradskaLinija gradskaLinija;
+    
+    @ManyToOne
+    @JoinColumn(name = "prevoznik")
+    private Prevoznik prevoznik;
+    
+    @OneToMany(mappedBy = "vozac")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<PolazakMedjugradska> polasci = new ArrayList<>();
        
     public Vozac() {
     }
@@ -107,6 +120,23 @@ public class Vozac implements Serializable {
     public void setGradskaLinija(GradskaLinija gradskaLinija) {
         this.gradskaLinija = gradskaLinija;
     }
+
+    public Prevoznik getPrevoznik() {
+        return prevoznik;
+    }
+
+    public void setPrevoznik(Prevoznik prevoznik) {
+        this.prevoznik = prevoznik;
+    }
+
+    public List<PolazakMedjugradska> getPolasci() {
+        return polasci;
+    }
+
+    public void setPolasci(List<PolazakMedjugradska> polasci) {
+        this.polasci = polasci;
+    }
+    
     
     
     public int getGodineIskustva() {

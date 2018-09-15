@@ -4,72 +4,83 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Busomanijak | Registracija</title>
-        <!--        <link type="text/css" rel="stylesheet" href="css/style.css"></link>-->
+        <link type="text/css" rel="stylesheet" href="css/style.css"/>
         <script src="js/validation.js"></script>
+
     </h:head>
     <h:body>
-        <div class="login-page">
-            <div class="form">
-                <h3>Registracija</h3>
-<!--        <h:form onsubmit="return checkData(#{accountController.noviKorisnik.korisnickoIme}, #{accountController.noviKorisnik.lozinka}, #{accountController.noviKorisnik.potvrdaLozinke})">-->
+        <header>
+            <h:outputText value="#{applicationController.visibleName} | Registracija"/>
+        </header>
+        <div style="align-content: center">
+            <div style="float:left">
                 <h:form onsubmit="return test()" id="registrationForm">
 
-                    <p:panelGrid columns="3" >
+                    <h:panelGrid columns="3" >
 
-                        <h:outputLabel for="ime" value="Ime:"/>
-                        <h:inputText id="ime" a:placeholder="ime" value="#{accountController.noviKorisnik.ime}" required="true" requiredMessage="Obavezno polje." label="Ime"/>
-                        <h:message for ="ime" style="color:red"/> 
+                        <p:outputLabel for="ime" value="Ime:"/>
+                        <p:inputText id="ime" placeholder="ime" value="#{accountController.noviKorisnik.ime}" required="true" requiredMessage="Obavezno polje." label="Ime"/>
+                        <p:message for ="ime" style="color:red"/> 
 
-                        <h:outputLabel for="prezime" value="Prezime:"/>
-                        <h:inputText id="prezime" a:placeholder="prezime" value="#{accountController.noviKorisnik.prezime}" required="true" requiredMessage="Obavezno polje." label="Prezime"/>
-                        <h:message for ="prezime" style="color:red"/>
+                        <p:outputLabel for="prezime" value="Prezime:"/>
+                        <p:inputText id="prezime" placeholder="prezime" value="#{accountController.noviKorisnik.prezime}" required="true" requiredMessage="Obavezno polje." label="Prezime"/>
+                        <p:message for ="prezime" style="color:red"/>
 
-                        <h:outputLabel for="korisnickoIme" value="Korisničko Ime:"/>
-                        <h:inputText id="korisnickoIme" a:placeholder="korisničko ime" value="#{accountController.noviKorisnik.korisnickoIme}" onblur="return checkUsername()" required="true" requiredMessage="Obavezno polje." label="Korisničko ime">
+                        <p:outputLabel for="korisnickoIme" value="Korisničko Ime:"/>
+                        <p:inputText id="korisnickoIme" placeholder="korisničko ime" value="#{accountController.noviKorisnik.korisnickoIme}" onblur="return checkUsername()" required="true" requiredMessage="Obavezno polje." label="Korisničko ime">
                             <f:validateLength minimum="4" maximum="15"/>
-                        </h:inputText>
-                        <h:message for ="korisnickoIme" style="color:red"/>
-                        
-                        <h:outputLabel for="lozinka" value="Lozinka:"/>
-                        <h:inputSecret id="lozinka" a:placeholder="lozinka" value="#{accountController.noviKorisnik.lozinka}" required="true" requiredMessage="Obavezno polje." label="Lozinka">
+                        </p:inputText>
+                        <p:message for ="korisnickoIme" style="color:red"/>
+
+                        <p:outputLabel for="lozinka" value="Lozinka:"/>
+                        <p:password id="lozinka" placeholder="lozinka" value="#{accountController.noviKorisnik.lozinka}" required="true" requiredMessage="Obavezno polje." label="Lozinka">
                             <f:validateLength minimum="6" maximum="12"/>
                             <f:validateRegex pattern="^((?=.*[a-z]){3,})(?=.*[A-Z])(?=.*[!@#\$%\^&amp;_0-9])(((.*)\2?(?!\2))+)$"/>
-                        </h:inputSecret>
-                        <h:message for ="lozinka" style="color:red"/>
+                        </p:password>
+                        <p:message for ="lozinka" style="color:red"/>
 
-                        <h:outputLabel for="potvrdaLozinke" value="Potvrdi lozinke:"/>
-                        <h:inputSecret id="potvrdaLozinke" a:placeholder="potvrda lozinke" value="#{accountController.noviKorisnik.potvrdaLozinke}" required="true" requiredMessage="Obavezno polje." label="Potvrdite lozinku"/>
-                        <h:message for ="potvrdaLozinke" style="color:red"/>
+                        <p:outputLabel for="potvrdaLozinke" value="Potvrdi lozinku:"/>
+                        <p:password id="potvrdaLozinke" placeholder="potvrda lozinke" value="#{accountController.noviKorisnik.potvrdaLozinke}" required="true" requiredMessage="Obavezno polje." label="Potvrdite lozinku"/>
+                        <p:message for ="potvrdaLozinke" style="color:red"/>
 
-                        <h:outputLabel for="adresa" value="Adresa:"/>
-                        <h:inputText id="adresa" a:placeholder="adresa stanovanja" value="#{accountController.noviKorisnik.adresa}" required="true" requiredMessage="Obavezno polje." label="Adresa"/>
-                        <h:message for ="adresa" style="color:red"/>
+                        <p:outputLabel for="adresa" value="Adresa:"/>
+                        <p:inputText id="adresa" placeholder="adresa stanovanja" value="#{accountController.noviKorisnik.adresa}" required="true" requiredMessage="Obavezno polje." label="Adresa"/>
+                        <p:message for ="adresa" style="color:red"/>
 
-                        <h:outputLabel for="datumRodjenja" value="Datum rođenja:"/>
-                        <h:inputText id="datumRodjenja" a:placeholder="datum rođenja (dd-mm-yyyy)" value="#{accountController.noviKorisnik.datumRodjenja}" required="true" requiredMessage="Obavezno polje." label="Datum rođenja">
-                            <f:convertDateTime pattern="dd-mm-yyyy" />
-                        </h:inputText>
-                        <h:message for ="datumRodjenja" style="color:red"/>
+                        <p:outputLabel for="datumRodjenja" value="Datum rođenja:"/>
+                        <p:calendar id="datumRodjenja" value="#{accountController.noviKorisnik.datumRodjenja}" required="true" requiredMessage="Obavezno polje." label="Datum rođenja" navigator="true"/>
+                        <p:message for ="datumRodjenja" style="color:red"/>
 
-                        <h:outputLabel for="telefon" value="Kontakt telefon:"/>
-                        <h:inputText id="telefon" a:placeholder="kontakt telefon" value="#{accountController.noviKorisnik.telefon}" required="true" requiredMessage="Obavezno polje." label="Kontakt telefon"/>
-                        <h:message for ="telefon" style="color:red"/>
+                        <p:outputLabel for="telefon" value="Kontakt telefon:"/>
+                        <p:inputText id="telefon" placeholder="kontakt telefon" value="#{accountController.noviKorisnik.telefon}" required="true" requiredMessage="Obavezno polje." label="Kontakt telefon"/>
+                        <p:message for ="telefon" style="color:red"/>
 
-                        <h:outputLabel for="kategorijaZaposlenja" value="Kategorija zaposlenja"/>
-                        <h:selectOneRadio id="kategorijaZaposlenja" required="true" requiredMessage="Obavezno polje." value="#{accountController.noviKorisnik.kategorijaZaposlenja}" label="Kategorija zaposlenja" converter="kategorijaZaposlenjaConverter">
+                        <p:outputLabel for="kategorijaZaposlenja" value="Kategorija zaposlenja"/>
+                        <p:selectOneMenu id="kategorijaZaposlenja" required="true" requiredMessage="Obavezno polje." value="#{accountController.noviKorisnik.kategorijaZaposlenja}" label="Kategorija zaposlenja" converter="kategorijaZaposlenjaConverter">
                             <f:selectItems value="#{registrationViewController.kategorije}" var="kat" itemLabel="#{kat.naziv}" itemValue="#{kat}" />
-                        </h:selectOneRadio>
-                        <h:message for ="kategorijaZaposlenja" style="color:red"/>
+                        </p:selectOneMenu>
+                        <p:message for ="kategorijaZaposlenja" style="color:red"/>
 
-                        <h:outputLabel for="email" value="e-mail adresa"/>
-                        <h:inputText id="email" a:placeholder="e-mail" value="#{accountController.noviKorisnik.mejl}" label="e-mail adresa"/>
-                        <h:commandButton value="Registruj se" action="#{accountController.register()}"/>
+                        <p:outputLabel for="email" value="e-mail adresa"/>
+                        <p:inputText id="email" placeholder="e-mail" value="#{accountController.noviKorisnik.mejl}" label="e-mail adresa"/>
 
-                        </p:panelGrid>
+
+                    </h:panelGrid>
+                    <br/>
+                                        <p:captcha />
+                    <br/>
+
+                    <p:commandButton value="Registruj se" ajax="false" action="#{accountController.register()}"/>
                 </h:form>
+            </div>
+            <div style="float:left">
+                <ui:insert>
+                    <ui:include src="template/login.xhtml"/>
+                </ui:insert>
             </div>
         </div>
     </h:body>

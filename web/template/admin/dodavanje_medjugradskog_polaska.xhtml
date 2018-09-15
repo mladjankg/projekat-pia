@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <p:steps activeIndex="#{medjugradskeView.polazakStepsIndex}">
+                <p:menuitem value="Prevoznik" />
+                <p:menuitem value="Linija" />
+                <p:menuitem value="Vreme polaska i dolaska"/>
+                <p:menuitem value="Autobus i vozač" />
+                <p:menuitem value="Potvrda" />
+            </p:steps>
+
+            <h:form rendered="#{medjugradskeView.polazakStepsIndex == 0}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="prevoznik_linije" value="Prevoznik:"/>
+                    <p:selectOneMenu id="prevoznik_linije" value="#{medjugradskeView.izabraniPrevoznik}" converter="prevoznikConverter" rendered="#{not empty medjugradskeView.prevoznici}">
+                        <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemLabel="#{p.naziv}" itemValue="#{p}"/>
+                    </p:selectOneMenu>  
+                </p:panelGrid>
+                <h:outputText rendered="#{empty medjugradskeView.prevoznici}" value="Nije dodat ni jedan prevoznik."/>
+                <p:commandButton value="Sledeci korak" action="#{medjugradskeView.sledeciKorakPolazak()}" update=":medjugradske_panel" disabled="#{empty medjugradskeView.prevoznici}"/>
+            </h:form>
+
+            <h:form rendered="#{medjugradskeView.polazakStepsIndex == 1}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="linija" value="Linija:"/>
+                    <p:selectOneMenu id="linija" value="#{medjugradskeView.noviPolazak.medjugradskaLinija}" converter="medjugradskaConverter" rendered="#{not empty medjugradskeView.linijePrevoznika}">
+                        <f:selectItems value="#{medjugradskeView.linijePrevoznika}" 
+                                       var="l" 
+                                       itemLabel="#{l.polaznaStanica.naziv} - #{l.odredisnaStanica.naziv}" 
+                                       itemValue="#{l}"/>
+                    </p:selectOneMenu>  
+                </p:panelGrid>
+                <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak}" process="@this" update=":medjugradske_panel"/>
+                <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeciKorakPolazak}" update=":medjugradske_panel"/>
+            </h:form>
+
+            <h:form rendered="#{medjugradskeView.polazakStepsIndex == 2}">
+                <p:panelGrid columns ="2">
+                    <p:outputLabel for="vreme_polaska" value="Vreme polaska:"/>
+                    <p:calendar 
+                        id="vreme_polaska" 
+                        navigator="true"
+                        value="#{medjugradskeView.noviPolazak.vremePolaska}" 
+                        mindate="#{applicationController.danas}"
+                        
+                        required="true" 
+
+                        pattern="yyyy-MM-dd HH:mm">
+                        <p:ajax event="dateSelect" process="@this" listener="#{medjugradskeView.promenaDatumaPolazak}" update="vreme_dolaska"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="vreme_dolaska" value="Vreme dolaska:"/>
+                    <p:calendar 
+                        id="vreme_dolaska" 
+                        navigator="true" 
+                        value="#{medjugradskeView.noviPolazak.vremeDolaska}" 
+                        mindate="#{medjugradskeView.noviPolazak.vremePolaska != null ? medjugradskeView.noviPolazak.vremePolaska : applicationController.danas}"
+                        required="true" 
+                        pattern="yyyy-MM-dd HH:mm" >
+                        <p:ajax event="dateSelect" listener="#{medjugradskeView.promenaDatumaDolazak}"  process="@this" update="vreme_polaska"/>
+                    </p:calendar>
+                    <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak}" process="@this" update=":medjugradske_panel"/>
+                    <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeciKorakPolazak}" update=":medjugradske_panel"/>
+                </p:panelGrid>
+            </h:form>
+
+            <h:form rendered="#{medjugradskeView.polazakStepsIndex == 3}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="autobus_polaska" value="Autobus:"/>
+                    <p:selectOneMenu id="autobus_polaska" value="#{medjugradskeView.noviPolazak.autobus}" converter="autobusConverter" rendered="#{not empty medjugradskeView.dostupniAutobusi}">
+                        <f:selectItems value="#{medjugradskeView.dostupniAutobusi}" 
+                                       var="l" 
+                                       itemLabel="#{l.marka} - #{l.model}" 
+                                       itemValue="#{l}"/>
+                    </p:selectOneMenu>  
+                </p:panelGrid>
+
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="vozac_polaska" value="Vozač:"/>
+                    <p:selectOneMenu id="vozac_polaska" value="#{medjugradskeView.noviPolazak.vozac}" converter="vozacConverter" rendered="#{not empty medjugradskeView.dostupniVozaci}">
+                        <f:selectItems value="#{medjugradskeView.dostupniVozaci}" 
+                                       var="v" 
+                                       itemLabel="#{v.ime} #{v.prezime}" 
+                                       itemValue="#{v}"/>
+                    </p:selectOneMenu>  
+                </p:panelGrid>
+                <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak}" process="@this" update=":medjugradske_panel"/>
+                <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeciKorakPolazak}" update=":medjugradske_panel"/>
+            </h:form>
+
+            <h:form rendered="#{medjugradskeView.polazakStepsIndex == 4}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="potvrda_polazak_prevoznik" value="Prevoznik:"/>
+                    <h:outputText id="potvrda_polazak_prevoznik" value="#{medjugradskeView.izabraniPrevoznik.naziv}"/>
+
+                    <p:outputLabel for="potvrda_polazak_linija" value="Linija:"/>
+                    <h:outputText id="potvrda_polazak_linija" value="#{medjugradskeView.noviPolazak.medjugradskaLinija.polaznaStanica.naziv} - #{medjugradskeView.noviPolazak.medjugradskaLinija.odredisnaStanica.naziv}"/>
+
+                    <p:outputLabel for="potvrda_vreme_polaska" value="Vreme polaska:"/>
+                    <h:outputText id="potvrda_vreme_polaska" value="#{medjugradskeView.noviPolazak.vremePolaska}"/>
+
+                    <p:outputLabel for="potvrda_vreme_dolaska" value="Vreme dolaska:"/>
+                    <h:outputText id="potvrda_vreme_dolaska" value="#{medjugradskeView.noviPolazak.vremeDolaska}"/>
+
+                    <p:outputLabel for="potvrda_polazak_vozac" value="Vozač:"/>
+                    <h:outputText id="potvrda_polazak_vozac" value="#{medjugradskeView.noviPolazak.vozac.ime} #{medjugradskeView.noviPolazak.vozac.prezime}"/>
+
+                    <p:outputLabel for="potvrda_polazak_autobus" value="Autobus:"/>
+                    <h:outputText id="potvrda_polazak_autobus" value="#{medjugradskeView.noviPolazak.autobus.marka} #{medjugradskeView.noviPolazak.autobus.model}"/>
+
+                    <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak()}" update=":medjugradske_panel" process="@this"/>
+                    <p:commandButton value="Potvrdi" actionListener="#{medjugradskeView.dodajPolazak}" update=":medjugradske_pregled :medjugradske_panel"/>
+                </p:panelGrid>
+
+
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

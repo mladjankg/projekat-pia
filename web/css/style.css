@@ -24,3 +24,12 @@ header {
     text-align: center;
     min-height: 90vh;
 }
+
+.center-screen-nh {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}

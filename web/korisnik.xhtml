@@ -16,12 +16,12 @@
         <div id="header">
             <ui:insert name="header">
                 <ui:include src="template/header.xhtml"/>
+                <ui:include src="template/korisnik/korisnik_menu.xhtml"/>
             </ui:insert>
         </div>
 
         <h:form id="karta_form">
-            <div id="gradska_karta_info">
-                 <p:panelGrid rendered="#{not empty accountController.korisnik.gradskaKarta}"  columns="2">
+                 <p:panelGrid rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta)}"  columns="2">
                     <p:outputLabel for="kategorija" value="Kategorija:" />
                     <h:outputText id="kategorija" value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
 
@@ -29,13 +29,20 @@
                     <h:outputText id="vazi_do" value="#{accountController.korisnik.gradskaKarta.datumVazenja}" rendered="#{accountController.korisnik.gradskaKarta.odobrena}">
                         <f:convertDateTime pattern="dd-MM-yyyy"/>
                     </h:outputText>
-                    <h:outputText rendered="#{not accountController.korisnik.gradskaKarta.adminPotvrdio}"  value="Kupovina još uvek nije odobrena."/>
+                    
+                     <p:outputLabel for="cena" value="Cena:" />
+                     <h:outputText id="cena" value="#{accountController.korisnik.kategorijaZaposlenja.cenaKarte}"/>
+
+                    
                 </p:panelGrid>
-            </div>
+            <h:outputText rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta) 
+                                      and not accountController.korisnik.gradskaKarta.adminPotvrdio}"  
+                          value="Kupovina još uvek nije odobrena."
+                          />
 
 
 
-            <p:panelGrid columns="2" id="gradska_karta_form" rendered="#{empty accountController.korisnik.gradskaKarta}" >
+            <p:panelGrid columns="2" id="gradska_karta_form" rendered="#{not korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta)}" >
                 <p:outputLabel  value="Kategorija:"/>
                 <h:outputText value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
 

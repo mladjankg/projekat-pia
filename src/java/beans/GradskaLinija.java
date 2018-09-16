@@ -15,31 +15,35 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
  * @author Mlađan
  */
 @Entity(name = "gradske_linije")
-public class GradskaLinija extends Linija implements Serializable{
+public class GradskaLinija extends Linija implements Serializable {
 
     @Column(name = "broj_linije", unique = true)
     private Integer brojLinije;
-   
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gradskaLinija")
+
+    @OneToMany(mappedBy = "gradskaLinija")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Polazak> redVoznje;
-    
+
     private Boolean aktivna;
-    
+
     @Column(name = "otkazana_do")
     private Date otkazanaDo;
-    
+
     @Transient
     private String otkazanaDoString;
-    
-    @Transient
+
+    @OneToMany(mappedBy = "gradskaLinija")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Vozac> vozaci;
-    
+
     public GradskaLinija() {
         super();
         vozaci = new ArrayList<>();
@@ -53,8 +57,7 @@ public class GradskaLinija extends Linija implements Serializable{
         this.vozaci = vozaci;
         this.redVoznje = redVoznje;
         this.aktivna = true;
-    } 
-    
+    }
 
     public Integer getBrojLinije() {
         return brojLinije;
@@ -100,7 +103,7 @@ public class GradskaLinija extends Linija implements Serializable{
         if (this.otkazanaDo == null) {
             return null;
         }
-        
+
         SimpleDateFormat std = new SimpleDateFormat("dd-MM-yyyy");
         return std.format(otkazanaDo);
 
@@ -109,6 +112,5 @@ public class GradskaLinija extends Linija implements Serializable{
     public void setOtkazanaDoString(String otkazanaDoString) {
         this.otkazanaDoString = otkazanaDoString;
     }
-    
-    
+
 }

@@ -35,7 +35,7 @@ public class ApplicationController {
         // ...
     }
 
-    private String visibleName = "BUSOMANIJAK";
+    private String visibleName = "BUSOMAN";
 
     public String getVisibleName() {
         return visibleName;

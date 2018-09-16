@@ -39,7 +39,7 @@
                 </p:column>
 
                 <p:column headerText="">
-                    <p:commandButton id="medjustanice" value="Međustanice"/>
+                    <p:commandButton id="medjustanice" value="Međustanice" process="@this"/>
                     <p:overlayPanel id="medjustanicePanel" for="medjustanice" hideEffect="fade" dynamic="true" style="width:600px">
                         <p:dataTable var="m" value="#{p.medjugradskaLinija.medjustanice}" rows="5" paginator="true">
                             <p:column>
@@ -103,7 +103,7 @@
             </h:form>
             
 
-            <p:dataTable style="margin-top:15px" id="rezultati_pretrage" value="#{gostViewController.rezultatPretrage}" var="p" rendered="#{not empty gostViewController.rezultatPretrage}">
+            <p:dataTable style="margin-top:15px" id="rezultati_pretrage" value="#{gostViewController.rezultatPretrage}" var="p" paginator="true" rows="5" rendered="#{not empty gostViewController.rezultatPretrage}">
                 <p:column headerText="Polazna stanica">
                     <h:outputText value="#{p.medjugradskaLinija.polaznaStanica.naziv}"/>
                 </p:column>

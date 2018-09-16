@@ -23,7 +23,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.Query;
-import org.apache.tomcat.jni.Stdlib;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -121,10 +120,8 @@ public class GostViewController implements Serializable {
             hqlQuery = session.createQuery("from medjugradske_polasci where vreme_polaska > ?1 order by vreme_polaska");
             hqlQuery.setParameter(1, Calendar.getInstance().getTime());
 
-            najskorijiPolasci = hqlQuery.getResultList();
-            if (najskorijiPolasci.size() > 10) {
-                najskorijiPolasci = najskorijiPolasci.subList(0, 9);
-            }
+            najskorijiPolasci = hqlQuery.setMaxResults(10).getResultList();
+
 
             tx.commit();
         } catch (HibernateException ex) {
@@ -193,11 +190,13 @@ public class GostViewController implements Serializable {
 
     public void pretraga() {
         if (this.parametri.odrediste == null && this.parametri.polaziste == null) {
+            this.rezultatPretrage = null;
             FacesContext.getCurrentInstance().addMessage("pretraga_poruka", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška", "Potrebno je uneti makar polazište ili odredište."));
             return;
         }
 
         if (this.parametri.datumPolaska == null) {
+            this.rezultatPretrage = null;
             FacesContext.getCurrentInstance().addMessage("pretraga_poruka", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška", "Morate uneti datum polaska autobusa."));
             return;
         }
@@ -220,7 +219,15 @@ public class GostViewController implements Serializable {
             params.add(dateTime);
             queryBuilder.append(" and vreme_polaska <= ?").append(params.size());
         }
-                
+        
+        queryBuilder.append(" order by vreme_polaska desc");
+        
+        //Ne radi
+//        if (this.parametri.polaziste != null) {
+//            params.add(this.parametri.polaziste);
+//            queryBuilder.append(" and polazna_stanica = ?").append(params.size());
+//        }
+        
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
         Transaction tx = null;
@@ -233,7 +240,6 @@ public class GostViewController implements Serializable {
                 hqlQuery.setParameter(i + 1, params.get(i));
             }
 
-            // hqlQuery.setParameter(1, this.parametri.datumPolaska);
             list = hqlQuery.getResultList();
             tx.commit();
         } catch (HibernateException ex) {
@@ -247,6 +253,7 @@ public class GostViewController implements Serializable {
         }
 
         if (ApplicationUtils.isNullOrEmpty(list)) {
+            this.rezultatPretrage = null;
             FacesContext.getCurrentInstance().addMessage("pretraga_poruka", new FacesMessage(FacesMessage.SEVERITY_INFO, "Pretraga:", " za dati unos nije pronadjen polazak."));
             return;
         }
@@ -257,7 +264,10 @@ public class GostViewController implements Serializable {
                     .filter(p
                             -> p.getMedjugradskaLinija()
                             .getPolaznaStanica()
-                            .equals(this.parametri.polaziste))
+                            .equals(this.parametri.polaziste) || 
+                                    (!ApplicationUtils.isNullOrEmpty(p.getMedjugradskaLinija().getMedjustanice()) &&
+                                    p.getMedjugradskaLinija().getMedjustanice().contains(this.parametri.polaziste))
+                    )        
                     .collect(toList());
 
             if (ApplicationUtils.isNullOrEmpty(list)) {
@@ -272,7 +282,10 @@ public class GostViewController implements Serializable {
                     .filter(p
                             -> p.getMedjugradskaLinija()
                             .getOdredisnaStanica()
-                            .equals(this.parametri.odrediste))
+                            .equals(this.parametri.odrediste)|| 
+                                    (!ApplicationUtils.isNullOrEmpty(p.getMedjugradskaLinija().getMedjustanice()) &&
+                                    p.getMedjugradskaLinija().getMedjustanice().contains(this.parametri.odrediste))
+                    )        
                     .collect(toList());
 
             if (ApplicationUtils.isNullOrEmpty(list)) {
@@ -299,7 +312,7 @@ public class GostViewController implements Serializable {
 
 
         this.rezultatPretrage = list;
-
+        this.parametri = new ParametriPretrage();
     }
 
     private Date getTimeFromDate(Calendar c, Date d) {

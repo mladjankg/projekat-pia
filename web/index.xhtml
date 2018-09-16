@@ -14,22 +14,28 @@
 
 
         <div class="center-screen">
-            <h:form>
-                <p:outputLabel style="font-size: xx-large" value="BUSOMANIJAK"/> <br/><br/>
-                <h:panelGrid columns="2">
-                    <span><i class="fa fa-user"></i></span>
-                    <p:inputText placeholder="Username" value="#{accountController.username}"/>
+            <h:form >
+                <div class="center-screen-nh">
+                    <p:outputLabel style="font-size: xx-large" value="BUSOMANIJAK"/> <br/><br/>
+                    <h:panelGrid columns="2">
+                        <span><i class="fa fa-user"></i></span>
+                        <p:inputText id="korisnicko_ime" placeholder="Korisničko ime" value="#{accountController.username}" required="true" requiredMessage="Korisničko ime je obavezno."/>
 
-                    <span><i class="fa fa-key"></i></span>            
-                    <p:password placeholder="Password" value="#{accountController.password}"/>
+                        <span><i class="fa fa-key"></i></span>            
+                        <p:password placeholder="Lozinka" id="lozinka" value="#{accountController.password}" required="true" requiredMessage="Lozinka je obavezna."/>
 
 
-                </h:panelGrid><br/>
-                <p:commandButton value="Prijava" action="#{accountController.login()}"/>
+                    </h:panelGrid>
+
+                    <p:messages id="login_poruke" severity="info error fatal" showDetail="true" showSummary="false" style="margin:2px" closable="false" >
+                        <p:autoUpdate/>
+                    </p:messages>
+                    <p:commandButton value="Prijava" action="#{accountController.login()}" update=""/>
+                </div>
             </h:form>
             <br/>
-            <p:outputLabel for="registracija" value="Nemate nalog?"/><p:commandLink id="registracija" value="Registrujte se" action="registracija?faces-redirect=true"/><br/>
-            <p:commandLink id="gost" value="Ulaz za goste" action="gost?faces-redirect=true"/>
+            <p:outputLabel for="registracija" value="Nemate nalog?"/><p:commandLink id="registracija" value="Registrujte se" action="registracija?faces-redirect=true" process="@this"/><br/>
+            <p:commandLink id="gost" value="Ulaz za goste" action="gost?faces-redirect=true" process="@this"/>
         </div>
     </h:body>
 </html>

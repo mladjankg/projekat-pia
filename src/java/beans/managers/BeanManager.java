@@ -131,6 +131,35 @@ public class BeanManager {
         }
     }
 
+    public static List getList(String queryString, List<Object> parameters) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        List list = null;
+
+        try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery(queryString);
+            int i = 0;
+            for (Object p : parameters) {
+                hqlQuery.setParameter(++i, p);
+            }
+
+            list = hqlQuery.getResultList();
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
     public static List getList(String queryString) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
@@ -164,6 +193,63 @@ public class BeanManager {
         try {
             tx = session.beginTransaction();
             Query hqlQuery = session.createQuery(queryString);
+            o = hqlQuery.setMaxResults(1).getSingleResult();
+            tx.commit();
+        } catch (NoResultException | HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            // ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return o;
+    }
+
+    public static void executeUpdate(String queryString, List<Object> parameters) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery(queryString);
+           
+            if (parameters != null) {
+                int i = 0;
+                for (Object p : parameters) {
+                    hqlQuery.setParameter(++i, p);
+                }
+            }
+            hqlQuery.executeUpdate();
+            tx.commit();
+        } catch (NoResultException | HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            // ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    
+    public static Object getObject(String queryString, List<Object> parameters) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Object o = null;
+
+        try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery(queryString);
+           
+            int i = 0;
+            for (Object p : parameters) {
+                hqlQuery.setParameter(++i, p);
+            }
             o = hqlQuery.setMaxResults(1).getSingleResult();
             tx.commit();
         } catch (NoResultException | HibernateException ex) {

@@ -8,10 +8,12 @@ import beans.Karta;
 import beans.Korisnik;
 import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
-import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -42,12 +44,14 @@ public class AccountController implements Serializable {
     public String login() {
         Korisnik k = KorisnikManager.getKorisnikByUsername(this.username);
         if (k == null) {
-            loginError = "Neispravno korisnicko ime i/ili lozinka.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška:", "Neispravno korisničko ime"));
+            this.username = null;
+//loginError = "Neispravno korisnicko ime i/ili lozinka.";
             return null;
         }
 
         if (!k.getLozinka().equals(this.password)) {
-            loginError = "Neispravno korisnicko ime i/ili lozinka.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška:", "Neispravna lozinka"));
             return null;
         }
 
@@ -57,16 +61,12 @@ public class AccountController implements Serializable {
             return "zahtevi?faces-redirect=true";
         } else {
             Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR, 23);
-            c.set(Calendar.MINUTE, 59);
-            c.set(Calendar.SECOND, 59);
-            Date today = c.getTime();
-            Object o = BeanManager.getObject("from karte where tip=0 and korisnik_id=" + korisnik.getId().toString());
-            Karta karta = null;
-            if (o != null) {
-                karta = (Karta)o;
-            }
-            korisnik.setGradskaKarta(karta);
+//            c.set(Calendar.HOUR, 0);
+//            c.set(Calendar.MINUTE);
+//            c.set(Calendar.SECOND, 0);
+
+
+            
             return "korisnik?faces-redirect=true";
         }
     }

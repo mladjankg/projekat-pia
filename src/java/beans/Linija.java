@@ -21,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import utils.ApplicationUtils;
 
 /**
  *

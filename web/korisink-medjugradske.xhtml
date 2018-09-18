@@ -1,12 +1,68 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>#{applicationController.visibleName} | Međugradske linije</title>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <ui:insert name="header">
+            <ui:include src="template/header.xhtml"/>
+            <ui:include src="template/korisnik/korisnik_menu.xhtml"/>
+        </ui:insert>
+        <p:panel header="Međugradske linije i polasci" id="medjugradske_panel">
+            <h:form>
+                <p:dataTable value="#{korisnikMedjugradskeView.polasci}" 
+                             var="p" 
+                             filteredValue="#{korisnikMedjugradskeView.polasciFilter}" 
+                             widgetVar="polasci_widget" 
+                             id="polasci_pregled"
+                             style="font-size: 10pt;">
+
+                    <p:column headerText="Prevoznik" filterBy="#{p.medjugradskaLinija.prevoznik.naziv}" filterMatchMode="contains">
+                        <h:outputText value="#{p.medjugradskaLinija.prevoznik.naziv}"/>
+                    </p:column>
+
+                    <p:column headerText="Grad polaska" filterBy="#{p.medjugradskaLinija.polaznaStanica.naziv}" filterMatchMode="contains">
+                        <h:outputText value="#{p.medjugradskaLinija.polaznaStanica.naziv}"/>
+                    </p:column>
+
+                    <p:column headerText="Grad odlaska" filterBy="#{p.medjugradskaLinija.odredisnaStanica.naziv}" filterMatchMode="contains">
+                        <h:outputText value="#{p.medjugradskaLinija.odredisnaStanica.naziv}"/>
+                    </p:column>
+
+                    <p:column headerText="Medjustanice" filterBy="#{p.medjugradskaLinija.medjustaniceMerged}" filterMatchMode="contains">
+                        <h:outputText value="#{p.medjugradskaLinija.medjustaniceMerged}"/>
+                    </p:column>
+
+                    <p:column headerText="Vreme polaska">
+                        <h:outputText  value="#{p.vremePolaska}">
+                            <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Vreme dolaska" width="auto">
+                        <h:outputText value="#{p.vremeDolaska}">
+                            <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Preostalo mesta">
+                        <h:outputText value="#{p.preostaloMesta}"/>
+                    </p:column>
+                    
+                    <p:column>
+                        <p:commandButton value="Detalji" action="#{korisnikMedjugradskeView.prikazDetalja(p)}" /> 
+                    </p:column>
+                    <p:column>
+                        <p:commandButton value="Rezerviši kartu" update=":medjugradske_panel" actionListener="#{korisnikMedjugradskeView.rezervisiKartu(p)}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:panel>
     </h:body>
 </html>
 

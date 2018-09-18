@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import utils.ApplicationUtils;
 
 /**
  *
@@ -119,7 +121,20 @@ public class Autobus implements Serializable {
         this.registracija = registracija;
     }
 
-    
+    public List<String> getSlikeList() {
+        List<String> lista = new ArrayList<>();
+        
+        if (ApplicationUtils.isNullOrEmpty(this.slike)) {
+            return lista;
+        }
+        StringTokenizer st = new StringTokenizer(this.slike, ";");
+        
+        while (st.hasMoreTokens()) {
+            lista.add(st.nextToken());
+        }
+        
+        return lista;
+    }
     
     @Override
     public int hashCode() {

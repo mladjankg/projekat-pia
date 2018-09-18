@@ -4,15 +4,10 @@
  */
 package controllers;
 
-import beans.Karta;
 import beans.Korisnik;
-import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;

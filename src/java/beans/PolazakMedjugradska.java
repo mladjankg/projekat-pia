@@ -9,14 +9,12 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
+import javax.persistence.Transient;
 /**
  *
  * @author Mlađan
@@ -52,6 +50,13 @@ public class PolazakMedjugradska implements Serializable {
     @ManyToOne
     @JoinColumn(name = "medjugradska_linija_id", nullable = false)
     private MedjugradskaLinija medjugradskaLinija;
+    
+    @Transient
+    private boolean korisnikRezervisao;
+    
+    @Transient
+    private boolean otvoreneRezervacije;
+    
     
     public Integer getId() {
         return id;
@@ -109,6 +114,21 @@ public class PolazakMedjugradska implements Serializable {
     public void setMedjugradskaLinija(MedjugradskaLinija medjugradskaLinija) {
         this.medjugradskaLinija = medjugradskaLinija;
     }
-    
 
+    public boolean isKorisnikRezervisao() {
+        return korisnikRezervisao;
+    }
+
+    public void setKorisnikRezervisao(boolean korisnikRezervisao) {
+        this.korisnikRezervisao = korisnikRezervisao;
+    }
+
+    public boolean isOtvoreneRezervacije() {
+        return otvoreneRezervacije;
+    }
+
+    public void setOtvoreneRezervacije(boolean otvoreneRezervacije) {
+        this.otvoreneRezervacije = otvoreneRezervacije;
+    }
+     
 }

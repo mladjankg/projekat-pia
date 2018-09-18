@@ -22,6 +22,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import utils.ApplicationUtils;
 
 /**
  *
@@ -43,6 +44,9 @@ public class MedjugradskaLinija extends Linija implements Serializable {
 
     @Transient
     private String color = "black";
+    
+    @Transient
+    private String medjustaniceMerged = null;
     
     public MedjugradskaLinija(Prevoznik prevoznik, Stanica polaznaStanica, Stanica odredisnaStanica, List<Stanica> medjustanice) {
         super(polaznaStanica, odredisnaStanica, medjustanice);
@@ -74,5 +78,21 @@ public class MedjugradskaLinija extends Linija implements Serializable {
         this.polasci = polasci;
     }
     
-    
+    public String getMedjustaniceMerged() {
+        if ("".equals(this.medjustaniceMerged)) {
+            return "";
+        }
+        
+        if (ApplicationUtils.isNullOrEmpty(this.getMedjustanice())) {
+            this.medjustaniceMerged = "";
+            return this.medjustaniceMerged;
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        
+        this.getMedjustanice().forEach(m -> sb.append(m.getNaziv()).append(", "));
+        
+        sb.delete(sb.length() - 2, sb.length() - 1);
+        return sb.toString();
+    }
 }

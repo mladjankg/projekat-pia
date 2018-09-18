@@ -33,8 +33,8 @@ public class Karta implements Serializable {
     private Korisnik korisnik;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "linija_id")
-    private MedjugradskaLinija linija;
+    @JoinColumn(name = "polazak_id")
+    private PolazakMedjugradska linija;
 
     private Boolean odobrena;
     
@@ -92,11 +92,11 @@ public class Karta implements Serializable {
         this.korisnik = korisnik;
     }
 
-    public MedjugradskaLinija getLinija() {
+    public PolazakMedjugradska getLinija() {
         return linija;
     }
 
-    public void setLinija(MedjugradskaLinija linija) {
+    public void setLinija(PolazakMedjugradska linija) {
         this.linija = linija;
     }
 

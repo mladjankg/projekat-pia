@@ -10,11 +10,11 @@
     <h:body>
         <ui:composition>
             <div style="padding-bottom:25px">
-            <p:tabMenu activeIndex="#{param.i}">
+                <p:tabMenu activeIndex="#{param.i}">
                 <p:menuitem value="Karta za gradski prevoz" outcome="korisnik" icon="ui-icon-star">
                     <f:param name="i" value="0" />
                 </p:menuitem>
-                <p:menuitem value="Medjugradske linije" outcome="medjugradske" icon="ui-icon-search">
+                <p:menuitem value="Medjugradske linije" outcome="korisink-medjugradske" icon="ui-icon-search">
                     <f:param name="i" value="1" />
                 </p:menuitem>
                 <p:menuitem value="Gradske linije" outcome="korisnik-gradske"  icon="ui-icon-document">

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <script src="http://maps.google.com/maps/api/js?key=AIzaSyAVZ7kblKm9vK3-RsdL3OXQavbpR7Blovk" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <ui:insert name="header">
+            <ui:include src="template/header.xhtml"/>
+        </ui:insert>
+        <p:commandButton action="korisnik-medjugradske" value="Nazad"/>
+
+
+        <p:panel header="prevoznik">
+            <p:panelGrid columns="2">
+                <p:graphicImage name="images/#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.logoURL}"/>
+
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="naziv_prevoznika" value="Naziv:"/>
+                    <h:outputText id="naziv_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.naziv}"/>
+
+                    <p:outputLabel for="adresa_prevoznika" value="Adresa:"/>
+                    <h:outputText id="adresa_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.adresa}"/>
+
+                    <p:outputLabel for="broj_telefona_prevoznika" value="Broj telefona:"/>
+                    <h:outputText id="broj_telefona_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.telefon}"/>
+                </p:panelGrid>
+            </p:panelGrid>
+        </p:panel>
+
+        <p:panel header="Vozač">
+            <p:panelGrid columns="2">
+                <p:outputLabel for="ime_vozaca" value="Ime i prezime"/>
+                <h:outputText id="ime_vozaca" value="#{korisnikMedjugradskeView.detalji.vozac.ime} #{korisnikMedjugradskeView.detalji.vozac.prezime}"/>
+
+                <p:outputLabel for="datum_rodjenja" value="Datum rođenja"/>
+                <h:outputText id="datum_rodjenja" value="#{korisnikMedjugradskeView.detalji.vozac.datumRodjenja}">
+                    <f:convertDateTime pattern="dd-MM-yyyy"/>
+                </h:outputText>
+
+                <p:outputLabel for="godine_iskustva" value="Godine iskustva"/>
+                <h:outputText id="godine_iskustva" value="#{korisnikMedjugradskeView.detalji.vozac.godineIskustva}"/>
+            </p:panelGrid>
+        </p:panel>
+
+        <p:panel header="Autobus">
+            <p:panelGrid columns="2">
+                <p:galleria value="#{korisnikMedjugradskeView.detalji.autobus.slikeList}" var="image" panelWidth="400" panelHeight="300">
+                    <p:graphicImage name="images/#{image}" alt="images/#{image}"/>
+                </p:galleria>
+
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="marka" value="Marka:"/>
+                    <h:outputText id="marka" value="#{korisnikMedjugradskeView.detalji.autobus.marka}"/>
+
+                    <p:outputLabel for="model" value="Model:"/>
+                    <h:outputText id="model" value="#{korisnikMedjugradskeView.detalji.autobus.model}"/>
+                </p:panelGrid>
+            </p:panelGrid>
+        </p:panel>
+        
+        <p:gmap center="44.011787, 20.910962" zoom="15" type="HYBRID" style="width:100%;height:400px" model="#{korisnikMedjugradskeView.mapModel}"/>
+    </h:body>
+</html>
+

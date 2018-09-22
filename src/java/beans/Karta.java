@@ -7,6 +7,7 @@ package beans;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,9 +33,9 @@ public class Karta implements Serializable {
     @JoinColumn(name = "korisnik_id")
     private Korisnik korisnik;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "polazak_id")
-    private PolazakMedjugradska linija;
+    private PolazakMedjugradska polazak;
 
     private Boolean odobrena;
     
@@ -60,7 +61,7 @@ public class Karta implements Serializable {
         this.tip = tip;
         this.datumVazenja = null;
         this.adminPotvrdio = false;
-        this.linija = null;
+        this.polazak = null;
         this.cena = 0;
     }
 
@@ -71,7 +72,7 @@ public class Karta implements Serializable {
         this.cena = cena;
         this.datumVazenja = null;
         this.adminPotvrdio = false;
-        this.linija = null;
+        this.polazak = null;
     }
 
     
@@ -92,13 +93,15 @@ public class Karta implements Serializable {
         this.korisnik = korisnik;
     }
 
-    public PolazakMedjugradska getLinija() {
-        return linija;
+    public PolazakMedjugradska getPolazak() {
+        return polazak;
     }
 
-    public void setLinija(PolazakMedjugradska linija) {
-        this.linija = linija;
+    public void setPolazak(PolazakMedjugradska polazak) {
+        this.polazak = polazak;
     }
+
+    
 
     public Boolean getOdobrena() {
         return odobrena;
@@ -153,14 +156,45 @@ public class Karta implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Kategorija korisnika: ").append(this.korisnik.getKategorijaZaposlenja().getNaziv()).append("\n")
-            .append("Tip karte: ").append((this.korisnik.getKategorijaZaposlenja().isTip() ? "godišnja\n" : "mesečna\n"))
-            .append("Cena karte: ").append(this.korisnik.getKategorijaZaposlenja().getCenaKarte());   
-        if (this.datumVazenja != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            sb.append("\nVaži do: ").append(sdf.format(datumVazenja));
+        if (!this.tip) {
+            sb.append("Kategorija korisnika: ").append(this.korisnik.getKategorijaZaposlenja().getNaziv()).append("\n")
+                .append("Tip karte: ").append((this.korisnik.getKategorijaZaposlenja().isTip() ? "godišnja\n" : "mesečna\n"))
+                .append("Cena karte: ").append(this.korisnik.getKategorijaZaposlenja().getCenaKarte());   
+            if (this.datumVazenja != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                sb.append("\nVaži do: ").append(sdf.format(datumVazenja));
+            }
+        }
+        else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            sb.append("Prevoznik: ").append(this.polazak.getMedjugradskaLinija().getPrevoznik()).append("\n")
+                    .append("Polaziste: ").append(this.polazak.getMedjugradskaLinija().getPolaznaStanica().getNaziv()).append("\n")
+                    .append("Odrediste: ").append(this.polazak.getMedjugradskaLinija().getOdredisnaStanica().getNaziv()).append("\n")
+                    .append("Vreme polaska: ").append(sdf.format(this.polazak.getVremePolaska()));
         }
         return sb.toString();
     }
+
+    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Karta other = (Karta) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
 }

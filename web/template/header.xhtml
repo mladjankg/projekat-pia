@@ -6,9 +6,20 @@
       xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition>
-            <h:form>
-            <p:commandButton id="logout" action="#{accountController.logout()}" value="Odjavi se"/>
-            </h:form>
+            <header style="background-color: #666;
+    padding: 10px;
+    text-align: center;
+    font-size: 50px;
+    color: white;
+    margin-bottom: 10px;">
+                <h:panelGrid columns="2">
+                <p:outputLabel value="#{applicationController.visibleName}" style="padding-right: 900px"/>
+                
+                <h:form>
+                    <p:commandButton style="font-size:14px;float:right; position:relative" id="logout" action="#{accountController.logout()}" value="Odjavi se"/>
+                </h:form>
+                </h:panelGrid>
+            </header>
         </ui:composition>
     </h:body>
 </html>

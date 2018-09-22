@@ -26,7 +26,10 @@
                     </p:selectOneMenu>  
                 </p:panelGrid>
                 <h:outputText rendered="#{empty medjugradskeView.prevoznici}" value="Nije dodat ni jedan prevoznik."/>
-                <p:commandButton value="Sledeci korak" action="#{medjugradskeView.sledeciKorakPolazak()}" update=":medjugradske_panel" disabled="#{empty medjugradskeView.prevoznici}"/>
+                <p:commandButton value="Sledeci korak" 
+                                 action="#{medjugradskeView.sledeciKorakPolazak()}" 
+                                 update=":medjugradske_panel" 
+                                 disabled="#{empty medjugradskeView.prevoznici}"/>
             </h:form>
 
             <h:form rendered="#{medjugradskeView.polazakStepsIndex == 1}">
@@ -40,7 +43,10 @@
                     </p:selectOneMenu>  
                 </p:panelGrid>
                 <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak}" process="@this" update=":medjugradske_panel"/>
-                <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeciKorakPolazak}" update=":medjugradske_panel"/>
+                <p:commandButton value="Sledeci korak" 
+                                 actionListener="#{medjugradskeView.sledeciKorakPolazak}" 
+                                 update=":medjugradske_panel"
+                                 disabled="#{empty medjugradskeView.linijePrevoznika}"/>
             </h:form>
 
             <h:form rendered="#{medjugradskeView.polazakStepsIndex == 2}">
@@ -94,7 +100,10 @@
                     </p:selectOneMenu>  
                 </p:panelGrid>
                 <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak}" process="@this" update=":medjugradske_panel"/>
-                <p:commandButton value="Sledeci korak" actionListener="#{medjugradskeView.sledeciKorakPolazak}" update=":medjugradske_panel"/>
+                <p:commandButton value="Sledeci korak" 
+                                 actionListener="#{medjugradskeView.sledeciKorakPolazak}" 
+                                 update=":medjugradske_panel"
+                                 disabled="#{(empty medjugradskeView.dostupniAutobusi) or (empty medjugradskeView.dostupniVozaci)}"/>
             </h:form>
 
             <h:form rendered="#{medjugradskeView.polazakStepsIndex == 4}">
@@ -106,10 +115,14 @@
                     <h:outputText id="potvrda_polazak_linija" value="#{medjugradskeView.noviPolazak.medjugradskaLinija.polaznaStanica.naziv} - #{medjugradskeView.noviPolazak.medjugradskaLinija.odredisnaStanica.naziv}"/>
 
                     <p:outputLabel for="potvrda_vreme_polaska" value="Vreme polaska:"/>
-                    <h:outputText id="potvrda_vreme_polaska" value="#{medjugradskeView.noviPolazak.vremePolaska}"/>
+                    <h:outputText id="potvrda_vreme_polaska" value="#{medjugradskeView.noviPolazak.vremePolaska}">
+                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                    </h:outputText>
 
                     <p:outputLabel for="potvrda_vreme_dolaska" value="Vreme dolaska:"/>
-                    <h:outputText id="potvrda_vreme_dolaska" value="#{medjugradskeView.noviPolazak.vremeDolaska}"/>
+                    <h:outputText id="potvrda_vreme_dolaska" value="#{medjugradskeView.noviPolazak.vremeDolaska}">
+                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                    </h:outputText>
 
                     <p:outputLabel for="potvrda_polazak_vozac" value="Vozač:"/>
                     <h:outputText id="potvrda_polazak_vozac" value="#{medjugradskeView.noviPolazak.vozac.ime} #{medjugradskeView.noviPolazak.vozac.prezime}"/>

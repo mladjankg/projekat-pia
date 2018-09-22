@@ -38,6 +38,7 @@ public class KorisnikViewController implements Serializable {
         List<Object> l = new ArrayList<>();
         l.add(today);
         Object o = BeanManager.getObject("from karte where tip=0 and korisnik_id=" + accountController.getKorisnik().getId().toString() + " and datum_vazenja > ?1 order by datum_kupovine desc", l);
+        
         Karta karta = null;
         if (o != null) {
             karta = (Karta) o;

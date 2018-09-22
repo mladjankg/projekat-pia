@@ -20,6 +20,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 /**
@@ -68,7 +70,8 @@ public class Korisnik implements Serializable{
     @Transient
     private Karta gradskaKarta;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "korisnik")
+    @OneToMany(mappedBy = "korisnik")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Karta> karte = new ArrayList<Karta>();
     
     public Korisnik() {

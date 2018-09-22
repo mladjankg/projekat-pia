@@ -4,11 +4,13 @@
  */
 package beans;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
+import javax.faces.context.FacesContext;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -129,8 +131,9 @@ public class Autobus implements Serializable {
         }
         StringTokenizer st = new StringTokenizer(this.slike, ";");
         
+        String basePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("upload.location") + File.separator;
         while (st.hasMoreTokens()) {
-            lista.add(st.nextToken());
+            lista.add(basePath + st.nextToken());
         }
         
         return lista;

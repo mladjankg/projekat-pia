@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -56,6 +57,11 @@ public class AdminController implements Serializable {
         noviVozac = new Vozac();
     }
 
+    @PostConstruct
+    public void init() {
+        this.zahteviZaRezervaciju = BeanManager.getList("from karte where admin_potvrdio=false and tip=true");
+    }
+    
     public List<Korisnik> getZahteviZaRegistraciju() {
         return zahteviZaRegistraciju;
     }
@@ -140,6 +146,7 @@ public class AdminController implements Serializable {
         List<Karta> karte = (List<Karta>) BeanManager.getList("from karte where admin_potvrdio = false and tip=0");
         this.zahteviZaKupovinu = karte;
     }
+    
     
     public String obradiZahtevZaKupovinuKarte(Karta k, boolean ishod) {
         k.setAdminPotvrdio(true);

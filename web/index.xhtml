@@ -4,7 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Busomanijak</title>
+        <title>#{applicationController.visibleName}</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
         <link type="text/css" rel="stylesheet" href="css/style.css"/>
 
@@ -16,7 +16,7 @@
         <div class="center-screen">
             <h:form >
                 <div class="center-screen-nh">
-                    <p:outputLabel style="font-size: xx-large" value="BUSOMANIJAK"/> <br/><br/>
+                    <p:outputLabel style="font-size: xx-large" value="#{applicationController.visibleName}"/> <br/><br/>
                     <h:panelGrid columns="2">
                         <span><i class="fa fa-user"></i></span>
                         <p:inputText id="korisnicko_ime" placeholder="Korisničko ime" value="#{accountController.username}" required="true" requiredMessage="Korisničko ime je obavezno."/>

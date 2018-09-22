@@ -23,7 +23,7 @@
         <p:accordionPanel id="zahtevi_panel"  activeIndex="#{zahteviViewController.activeTab}">
             <p:ajax event="tabChange" listener="#{zahteviViewController.onTabChange}"/>
             <p:tab title="Zahtevi za registraciju" id="tab_0">
-                
+
                 <h:form>
 
                     <h:outputText value="Trenutno nema zahteva za registraciju." rendered="#{empty adminController.zahteviZaRegistraciju}"/>
@@ -41,7 +41,9 @@
                         </p:column>
 
                         <p:column headerText="Datum rođenja">
-                            <h:outputText value="#{k.datumRodjenja}"/>
+                            <h:outputText value="#{k.datumRodjenja}">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
                         </p:column>
 
                         <p:column headerText="Adresa">
@@ -65,33 +67,76 @@
                         <p:column headerText="Kupac">
                             <h:outputText value="#{zk.korisnik.ime} #{zk.korisnik.prezime}"/>
                         </p:column>
-                       
+
                         <p:column headerText="Kategorija">
                             <h:outputText value="#{zk.korisnik.kategorijaZaposlenja.naziv}"/>
                         </p:column>
-                     
+
                         <p:column headerText="Cena">
                             <h:outputText value="#{zk.cena}"/>
                         </p:column>
-                   
+
                         <p:column>
                             <p:commandButton value="Odobri" update=":zahtevi_panel" action="#{zahteviViewController.odobriZahtevZaKupovinu(zk)}"/>
                         </p:column>
-                    
+
                         <p:column>
                             <p:commandButton value="Odbij" update=":zahtevi_panel" action="#{zahteviViewController.odbijZahtevZaKupovinu(zk)}"/>
                         </p:column>
                     </p:dataTable>
                 </h:form>
             </p:tab>
-            <p:tab title="Zahtevi za registraciju medjugradskih karata." id="tab_2">
+            <p:tab title="Zahtevi za rezervaciju medjugradskih karata." id="tab_2">
                 <h:form>
                     <h:outputText value="Trenutno nema zahteva za rezervaciju medjugradskih karata." rendered="#{empty adminController.zahteviZaRezervaciju}" />
-                    <h:outputText value="Nije implementirano jos uvek" rendered="#{not empty adminController.zahteviZaRezervaciju}" />
+
+                    <p:dataTable value="#{adminController.zahteviZaRezervaciju}"
+                                 rendered="#{not empty adminController.zahteviZaRezervaciju}" 
+                                 var="r">
+                        <p:column headerText="Korisnik">
+                            <h:outputText value="#{r.korisnik.korisnickoIme}"/>
+                        </p:column>
+
+                        <p:column headerText="Datum rezervacije">
+                            <h:outputText value="#{r.datumKupovine}"> 
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Polazište">
+                            <h:outputText value="#{r.polazak.medjugradskaLinija.polaznaStanica.naziv}"/>
+                        </p:column>
+
+                        <p:column headerText="Odredište">
+                            <h:outputText value="#{r.polazak.medjugradskaLinija.odredisnaStanica.naziv}"/>
+                        </p:column>
+
+                        <p:column headerText="Prevoznik">
+                            <h:outputText value="#{r.polazak.medjugradskaLinija.prevoznik.naziv}"/>
+                        </p:column>
+
+                        <p:column headerText="Datum polaska">
+                            <h:outputText value="#{r.polazak.vremePolaska}"> 
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton value="Odobri" action="#{zahteviViewController.odobriZahtevZaRezervaciju(r)}" update=":zahtevi_panel"/>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton value="Poništi" action="#{zahteviViewController.odbijZahtevZaRezervaciju(r)}" update=":zahtevi_panel"/>
+                        </p:column>
+
+                    </p:dataTable>
                 </h:form>
             </p:tab>
         </p:accordionPanel>
 
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

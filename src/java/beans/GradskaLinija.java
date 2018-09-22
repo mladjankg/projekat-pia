@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import utils.ApplicationUtils;
 
 /**
  *
@@ -80,7 +82,12 @@ public class GradskaLinija extends Linija implements Serializable {
     }
 
     public void setRedVoznje(List<Polazak> redVoznje) {
-        this.redVoznje = redVoznje;
+        if (!ApplicationUtils.isNullOrEmpty(redVoznje)) {
+            this.redVoznje = redVoznje.stream().sorted((x, y) -> x.getVremePolaska().compareTo(y.getVremePolaska())).collect(toList());
+        }
+        else {
+            this.redVoznje = redVoznje;
+        }
     }
 
     public Boolean getAktivna() {

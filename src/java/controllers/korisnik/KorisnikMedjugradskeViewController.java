@@ -5,11 +5,12 @@
 package controllers.korisnik;
 
 import beans.Karta;
+import beans.Korisnik;
 import beans.MedjugradskaLinija;
 import beans.PolazakMedjugradska;
 import beans.Stanica;
-import beans.managers.BeanManager;
 import controllers.AccountController;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,10 +21,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
@@ -36,8 +40,8 @@ import utils.HibernateUtil;
  * @author Mlađan
  */
 @ManagedBean(name = "korisnikMedjugradskeView")
-@SessionScoped
-public class KorisnikMedjugradskeViewController {
+@ViewScoped
+public class KorisnikMedjugradskeViewController implements Serializable {
 
     @ManagedProperty(value = "#{accountController}")
     private AccountController controller;
@@ -60,8 +64,6 @@ public class KorisnikMedjugradskeViewController {
 
     @PostConstruct
     public void init() {
-//        List<Object> l = new ArrayList<>();
-//        l.add(Calendar.getInstance().getTime());
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         Transaction tx = null;
@@ -77,14 +79,11 @@ public class KorisnikMedjugradskeViewController {
             c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 45);
             Date limit = c.getTime();
             polasci.forEach(p -> {
-                if (!p.getVremePolaska().before(limit)) {
+                if (!limit.before(p.getVremePolaska())) {
                     p.setOtvoreneRezervacije(false);
                 } else {
                     p.setOtvoreneRezervacije(true);
                 }
-                
-                //TODO: Vidi da li je korisnik rezervisao kartu
-
             });
             tx.commit();
         } catch (HibernateException ex) {
@@ -133,12 +132,14 @@ public class KorisnikMedjugradskeViewController {
             LatLng krajnja = new LatLng(linija.getOdredisnaStanica().getLatitude(), linija.getOdredisnaStanica().getLongitude());
             Marker m = new Marker(pocetna, linija.getPolaznaStanica().getNaziv(), null, "images/blue-pin.png");
 
-            this.mapModel.addOverlay(new Marker(pocetna, linija.getPolaznaStanica().getNaziv(), null, "./resources/blue-pin.png"));
-            this.mapModel.addOverlay(new Marker(krajnja, linija.getOdredisnaStanica().getNaziv(), null, "C:\\Users\\Mlađan\\Documents\\NetBeansProjects\\ProjekatPIA\\web\\resources\\images\\green-pin.png"));
+            this.mapModel.addOverlay(new Marker(pocetna, linija.getPolaznaStanica().getNaziv(), null ,"resources/images/blue.png"));
+            this.mapModel.addOverlay(new Marker(krajnja, linija.getOdredisnaStanica().getNaziv(), null, "resources/images/green.png"));
+//            this.mapModel.addOverlay(new Marker(pocetna, linija.getPolaznaStanica().getNaziv(), null, "images/blue-pin.png"));
+//            this.mapModel.addOverlay(new Marker(krajnja, linija.getOdredisnaStanica().getNaziv(), null, "C:\\Users\\Mlađan\\Documents\\NetBeansProjects\\ProjekatPIA\\web\\resources\\images\\green-pin.png"));
 
             for (Stanica s : linija.getMedjustanice()) {
                 LatLng koordinate = new LatLng(s.getLatitude(), s.getLongitude());
-                this.mapModel.addOverlay(new Marker(koordinate, s.getNaziv()/*, null, "yellow-icon.png"*/));
+                this.mapModel.addOverlay(new Marker(koordinate, s.getNaziv(), null, "resources/images/yellow.png"));
             }
             return "detalji?faces-redirect=true";
         }
@@ -163,8 +164,7 @@ public class KorisnikMedjugradskeViewController {
         }
 
         Karta k = new Karta(controller.getKorisnik(), Calendar.getInstance().getTime(), Boolean.TRUE);
-        p.setPreostaloMesta(p.getPreostaloMesta() - 1);
-
+        k.setPolazak(p);
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         Transaction tx = null;
@@ -173,17 +173,84 @@ public class KorisnikMedjugradskeViewController {
         try {
             tx = session.beginTransaction();
             beanId = (Integer) session.save(k);
-            session.update(p);
-            p.setKorisnikRezervisao(true);
+            Query hqlQuery = session.createQuery("from medjugradske_polasci where id=" + p.getId());
+            PolazakMedjugradska pol = (PolazakMedjugradska) hqlQuery.getSingleResult();
+
+            pol.setPreostaloMesta(pol.getPreostaloMesta() - 1);
+            session.update(pol);
+            p.setPreostaloMesta(pol.getPreostaloMesta());
             tx.commit();
         } catch (HibernateException ex) {
             if (tx != null) {
                 tx.rollback();
             }
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Info", "Greska u komunikaciji sa bazom"));
-
+        } catch(NoResultException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
         } finally {
             session.close();
         }
+        
+        controller.getKorisnik().getKarte().add(k);
+    }
+    
+    public void rezervisiKartuDetalji() {
+        this.rezervisiKartu(this.detalji);
+    }
+    
+    public boolean korisnikRezervisao(PolazakMedjugradska p) {
+        for(Karta k: controller.getKorisnik().getKarte()) {
+            if (k.getPolazak() != null) {
+                if (k.getPolazak().getId().equals(p.getId())) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean mogucaRezervacija(PolazakMedjugradska p) {
+        return korisnikRezervisao(p) && p.isOtvoreneRezervacije();
+    }
+    
+    public boolean korisnikRezervisaoDetalji() {
+        return this.korisnikRezervisao(this.detalji);
+    }
+    
+    public void otkaziRezervaciju(Karta k) {
+        //TODO: Ne radi brisanje
+        controller.getKorisnik().getKarte().remove(k);
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+        Transaction tx = null;
+         try {
+            tx = session.beginTransaction();
+            Query hqlQuery = session.createQuery("delete from karte where id=:idKarte");
+            hqlQuery.setParameter("idKarte", k.getId());
+            hqlQuery.executeUpdate();
+            
+            hqlQuery = session.createQuery("from medjugradske_polasci where id=:idPolaska");
+            hqlQuery.setParameter("idPolaska", k.getPolazak().getId());
+            PolazakMedjugradska p = (PolazakMedjugradska) hqlQuery.getSingleResult();
+            
+            p.setPreostaloMesta(p.getPreostaloMesta() + 1);
+            session.update(p);
+            k.getPolazak().setPreostaloMesta(p.getPreostaloMesta());
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }         
+        } finally {
+            session.close();
+        }
+         
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Rezervacija uspešno otkazana."));
     }
 }

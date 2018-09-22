@@ -12,58 +12,79 @@
         <ui:insert name="header">
             <ui:include src="template/header.xhtml"/>
         </ui:insert>
-        <p:commandButton action="korisnik-medjugradske" value="Nazad"/>
+        <h:form>
+            <p:commandButton action="#{detaljiLinijeView.nazad}"  value="Nazad"/>
+        </h:form>
 
 
-        <p:panel header="prevoznik">
-            <p:panelGrid columns="2">
-                <p:graphicImage name="images/#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.logoURL}"/>
 
+        <p:panelGrid columns="2">
+
+            <p:panel header="Prevoznik">
                 <p:panelGrid columns="2">
-                    <p:outputLabel for="naziv_prevoznika" value="Naziv:"/>
-                    <h:outputText id="naziv_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.naziv}"/>
+                    <p:graphicImage name="images/#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.logoURL}"/>
 
-                    <p:outputLabel for="adresa_prevoznika" value="Adresa:"/>
-                    <h:outputText id="adresa_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.adresa}"/>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="naziv_prevoznika" value="Naziv:"/>
+                        <h:outputText id="naziv_prevoznika" value="#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.naziv}"/>
 
-                    <p:outputLabel for="broj_telefona_prevoznika" value="Broj telefona:"/>
-                    <h:outputText id="broj_telefona_prevoznika" value="#{korisnikMedjugradskeView.detalji.medjugradskaLinija.prevoznik.telefon}"/>
+                        <p:outputLabel for="adresa_prevoznika" value="Adresa:"/>
+                        <h:outputText id="adresa_prevoznika" value="#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.adresa}"/>
+
+                        <p:outputLabel for="broj_telefona_prevoznika" value="Broj telefona:"/>
+                        <h:outputText id="broj_telefona_prevoznika" value="#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.telefon}"/>
+                    </p:panelGrid>
                 </p:panelGrid>
-            </p:panelGrid>
-        </p:panel>
+            </p:panel>
 
-        <p:panel header="Vozač">
-            <p:panelGrid columns="2">
-                <p:outputLabel for="ime_vozaca" value="Ime i prezime"/>
-                <h:outputText id="ime_vozaca" value="#{korisnikMedjugradskeView.detalji.vozac.ime} #{korisnikMedjugradskeView.detalji.vozac.prezime}"/>
-
-                <p:outputLabel for="datum_rodjenja" value="Datum rođenja"/>
-                <h:outputText id="datum_rodjenja" value="#{korisnikMedjugradskeView.detalji.vozac.datumRodjenja}">
-                    <f:convertDateTime pattern="dd-MM-yyyy"/>
-                </h:outputText>
-
-                <p:outputLabel for="godine_iskustva" value="Godine iskustva"/>
-                <h:outputText id="godine_iskustva" value="#{korisnikMedjugradskeView.detalji.vozac.godineIskustva}"/>
-            </p:panelGrid>
-        </p:panel>
-
-        <p:panel header="Autobus">
-            <p:panelGrid columns="2">
-                <p:galleria value="#{korisnikMedjugradskeView.detalji.autobus.slikeList}" var="image" panelWidth="400" panelHeight="300">
-                    <p:graphicImage name="images/#{image}" alt="images/#{image}"/>
-                </p:galleria>
-
+            <p:panel header="Vozač">
                 <p:panelGrid columns="2">
-                    <p:outputLabel for="marka" value="Marka:"/>
-                    <h:outputText id="marka" value="#{korisnikMedjugradskeView.detalji.autobus.marka}"/>
+                    <p:outputLabel for="ime_vozaca" value="Ime i prezime"/>
+                    <h:outputText id="ime_vozaca" value="#{detaljiLinijeView.p.vozac.ime} #{detaljiLinijeView.p.vozac.prezime}"/>
 
-                    <p:outputLabel for="model" value="Model:"/>
-                    <h:outputText id="model" value="#{korisnikMedjugradskeView.detalji.autobus.model}"/>
+                    <p:outputLabel for="datum_rodjenja" value="Datum rođenja"/>
+                    <h:outputText id="datum_rodjenja" value="#{detaljiLinijeView.p.vozac.datumRodjenja}">
+                        <f:convertDateTime pattern="dd-MM-yyyy"/>
+                    </h:outputText>
+
+                    <p:outputLabel for="godine_iskustva" value="Godine iskustva"/>
+                    <h:outputText id="godine_iskustva" value="#{detaljiLinijeView.p.vozac.godineIskustva}"/>
                 </p:panelGrid>
-            </p:panelGrid>
+            </p:panel>
+
+            <p:panel header="Autobus">
+                <p:panelGrid columns="2">
+                    <p:galleria value="#{detaljiLinijeView.p.autobus.slikeList}" var="image" panelWidth="400" panelHeight="300">
+                        <p:graphicImage name="#{image}" alt="#{image}"/>
+                    </p:galleria>
+
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="marka" value="Marka:"/>
+                        <h:outputText id="marka" value="#{detaljiLinijeView.p.autobus.marka}"/>
+
+                        <p:outputLabel for="model" value="Model:"/>
+                        <h:outputText id="model" value="#{detaljiLinijeView.p.autobus.model}"/>
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:panel>
+            <p:panel header="Karta">
+                <h:form id="rezervacija_form">
+                    <p:commandButton value="Rezervisi kartu" 
+                                     actionListener="#{detaljiLinijeView.rezervisiKartu()}" 
+                                     rendered="#{detaljiLinijeView.p.otvoreneRezervacije and (not detaljiLinijeView.korisnikRezervisao(detaljiLinijeView.p))}"
+                                     update=":rezervacija_form"/>
+                </h:form>
+            </p:panel>
+
+        </p:panelGrid>
+        <p:panel header="Stanice">
+            <p:gmap center="#{detaljiLinijeView.p.medjugradskaLinija.polaznaStanica.latitude}, #{detaljiLinijeView.p.medjugradskaLinija.polaznaStanica.longitude}" 
+                    zoom="8" type="HYBRID" style="height: 400px" model="#{detaljiLinijeView.mapModel}"/>
         </p:panel>
-        
-        <p:gmap center="44.011787, 20.910962" zoom="15" type="HYBRID" style="width:100%;height:400px" model="#{korisnikMedjugradskeView.mapModel}"/>
+
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

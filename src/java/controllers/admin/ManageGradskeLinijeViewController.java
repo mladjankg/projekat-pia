@@ -6,9 +6,11 @@ package controllers.admin;
 
 import beans.GradskaLinija;
 import beans.Polazak;
+import beans.Poruka;
 import beans.Stanica;
 import beans.Vozac;
 import beans.managers.BeanManager;
+import controllers.AccountController;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -39,6 +42,9 @@ import utils.HibernateUtil;
 @ViewScoped
 public class ManageGradskeLinijeViewController implements Serializable {
 
+    @ManagedProperty(value = "#{accountController}")
+    private AccountController controller;
+    
     private String activeTab;
 
     private List<Vozac> vozaci;
@@ -114,6 +120,16 @@ public class ManageGradskeLinijeViewController implements Serializable {
         medjustanice = new DualListModel<>(stanice, new ArrayList<>());
     }
 
+    public AccountController getController() {
+        return controller;
+    }
+
+    public void setController(AccountController controller) {
+        this.controller = controller;
+    }
+
+    
+    
     public List<Vozac> getVozaci() {
         return vozaci;
     }
@@ -256,13 +272,13 @@ public class ManageGradskeLinijeViewController implements Serializable {
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         Date today = c.getTime();
         if (today.after(this.periodOtkazivanja)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Datum do kog je otkazana linija ne sme biti u proslosti.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Datum do kog je otkazana linija ne sme biti u prošlosti."));
             return;
         }
 
         GradskaLinija gl = linije.stream().filter(l -> l.getBrojLinije().equals(this.brojOtkazaneLinije)).findFirst().get();
         if (gl == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fatalna greska: linija nije pronadjena.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,"Fatalna greška: linija nije pronađena."));
             return;
         }
         neotkazaneLinije.remove(gl);
@@ -271,12 +287,17 @@ public class ManageGradskeLinijeViewController implements Serializable {
 
         BeanManager.updateBean(gl);
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Linija " + this.brojOtkazaneLinije + " je uspesno otkazana.", null));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Poruka p = new Poruka("Linija " + gl.getId() + " je otkazana do " + sdf.format(gl.getOtkazanaDo()) + ".", today, controller.getKorisnik());
+        p.setTip(true);
+        BeanManager.addBean(p);
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Linija " + this.brojOtkazaneLinije + " je uspešno otkazana."));
     }
 
     public void dodajVozaca() {
         if (noviVozac == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fatalna greska pri dodavanju vozaca.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Fatalna greška pri dodavanju vozača."));
             return;
         }
 
@@ -284,30 +305,43 @@ public class ManageGradskeLinijeViewController implements Serializable {
         Integer i = BeanManager.addBean(noviVozac);
 
         if (i == null || i == 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska pri dodavanju vozaca.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Greška pri dodavanju vozača."));
             return;
         }
 
         this.vozaci.add(noviVozac);
         noviVozac = new Vozac();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Vozac uspesno dodat.", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Vozač uspešno dodat."));
 
     }
 
-    public Integer dodajLiniju() {
+    public void dodajLiniju() {
         List<Stanica> dodateStanice = medjustanice.getTarget();
-        if (dodateStanice.isEmpty() || dodateStanice.size() < 2) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage("Neuspesno dodavanje vozaca."));
-            return null;
+        if (dodateStanice.isEmpty() || dodateStanice.size() < 5) {
+           
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Linija mora sadržati makar 5 stanica."));
+            return;
         }
-        this.novaLinija.setPolaznaStanica(dodateStanice.get(0));
-        this.novaLinija.setOdredisnaStanica(dodateStanice.get(dodateStanice.size() - 1));
+
 
         dodateStanice.remove(0);
         dodateStanice.remove(dodateStanice.size() - 1);
         this.novaLinija.setMedjustanice(dodateStanice);
-
+        
+        GradskaLinija gl = null;
+        try {
+            gl = this.linije.stream().filter(l -> l.getBrojLinije().equals(novaLinija.getBrojLinije())).findAny().get();
+        }
+        catch (Exception e) {
+            gl = null;
+        }
+        
+        if (gl != null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Linija sa unetim brojem već postoji."));
+            return;
+        }
+        this.novaLinija.setPolaznaStanica(dodateStanice.get(0));
+        this.novaLinija.setOdredisnaStanica(dodateStanice.get(dodateStanice.size() - 1));
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         Integer id = null;
@@ -316,14 +350,16 @@ public class ManageGradskeLinijeViewController implements Serializable {
             id = (Integer) session.save(this.novaLinija);
 
             if (id == null) {
-                return null;
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Fatalna greška pri dodavanju linije."));
+                return;
             }
             
             for (Polazak p : this.novaLinija.getRedVoznje()) {
                 p.setGradskaLinija(this.novaLinija);
                 id = (Integer) session.save(p);
                 if (id == null) {
-                    return null;
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Fatalna greška pri dodavanju linije."));
+                    return;
                 }
             }
             
@@ -340,19 +376,20 @@ public class ManageGradskeLinijeViewController implements Serializable {
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
-                return null;
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Fatalna greška pri dodavanju linije."));
+                return;
             }
         } finally {
             session.close();
         }
 
         this.linije.add(this.novaLinija);
+        this.neotkazaneLinije.add(this.novaLinija);
         this.novaLinija = new GradskaLinija();
 
         List<Stanica> l = BeanManager.getList("from stanice where tip_stanice = 0");
         this.medjustanice = new DualListModel<>(l, new ArrayList<>());
-
-        return id;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Linija uspešno dodata."));
     }
 
     public void dodajPolazak(AjaxBehaviorEvent e) {

@@ -94,6 +94,9 @@
                     <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodni}" update=":medjugradske_panel" process="@this"/>
                     <p:commandButton value="Potvrdi" actionListener="#{medjugradskeView.dodajLiniju}" update=":medjugradske_panel :medjugradske_pregled"/>
                 </p:panelGrid>
+                <p:messages severity="info error" showSummary="false" showDetail="true">
+                    <p:autoUpdate/>
+                </p:messages>
             </h:form>
         </ui:composition>
     </h:body>

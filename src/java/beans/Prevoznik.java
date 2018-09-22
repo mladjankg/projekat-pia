@@ -114,4 +114,9 @@ public class Prevoznik implements Serializable {
         
         return p;
     }
+
+    @Override
+    public String toString() {
+        return this.naziv;
+    }
 }

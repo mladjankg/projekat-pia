@@ -33,9 +33,11 @@ public class Poruka implements Serializable {
     @JoinColumn(name = "korisnik_id", nullable = false)
     private Korisnik korisnik;
     
-    @Column(name = "dautm_poruke")
+    @Column(name = "datum_poruke")
     private Date datumPoruke;
 
+    private boolean tip;
+    
     public Poruka() {
     }
 
@@ -44,6 +46,7 @@ public class Poruka implements Serializable {
         this.datumPoruke = datumPoruke;
         this.korisnik = korisnik;
     }
+    
     
     public Integer getId() {
         return id;
@@ -75,6 +78,14 @@ public class Poruka implements Serializable {
 
     public void setKorisnik(Korisnik korisnik) {
         this.korisnik = korisnik;
+    }
+
+    public boolean getTip() {
+        return tip;
+    }
+
+    public void setTip(boolean tip) {
+        this.tip = tip;
     }
     
     

@@ -23,16 +23,21 @@
                     <h:panelGrid columns="3" >
 
                         <p:outputLabel for="ime" value="Ime:"/>
-                        <p:inputText id="ime" placeholder="ime" value="#{accountController.noviKorisnik.ime}" required="true" requiredMessage="Obavezno polje." label="Ime"/>
+                        <p:inputText id="ime" placeholder="ime" value="#{accountController.noviKorisnik.ime}" required="true" requiredMessage="Obavezno polje." label="Ime">
+                            <f:validateRegex pattern="^([a-zA-Z]+)$"/>
+                        </p:inputText>
                         <p:message for ="ime" style="color:red"/> 
 
                         <p:outputLabel for="prezime" value="Prezime:"/>
-                        <p:inputText id="prezime" placeholder="prezime" value="#{accountController.noviKorisnik.prezime}" required="true" requiredMessage="Obavezno polje." label="Prezime"/>
+                        <p:inputText id="prezime" placeholder="prezime" value="#{accountController.noviKorisnik.prezime}" required="true" requiredMessage="Obavezno polje." label="Prezime">
+                            <f:validateRegex pattern="^([a-zA-Z]+)$"/>
+                        </p:inputText>
                         <p:message for ="prezime" style="color:red"/>
 
                         <p:outputLabel for="korisnickoIme" value="Korisničko Ime:"/>
                         <p:inputText id="korisnickoIme" placeholder="korisničko ime" value="#{accountController.noviKorisnik.korisnickoIme}" onblur="return checkUsername()" required="true" requiredMessage="Obavezno polje." label="Korisničko ime">
                             <f:validateLength minimum="4" maximum="15"/>
+                            <f:validateRegex pattern="^([0-9a-zA-Z]+)$"/>
                         </p:inputText>
                         <p:message for ="korisnickoIme" style="color:red"/>
 
@@ -52,11 +57,19 @@
                         <p:message for ="adresa" style="color:red"/>
 
                         <p:outputLabel for="datumRodjenja" value="Datum rođenja:"/>
-                        <p:calendar id="datumRodjenja" value="#{accountController.noviKorisnik.datumRodjenja}" required="true" requiredMessage="Obavezno polje." label="Datum rođenja" navigator="true"/>
+                        <p:calendar id="datumRodjenja" value="#{accountController.noviKorisnik.datumRodjenja}" 
+                                    required="true" 
+                                    requiredMessage="Obavezno polje." 
+                                    maxdate="#{applicationController.sad}"
+                                    label="Datum rođenja" 
+                                    navigator="true"/>
                         <p:message for ="datumRodjenja" style="color:red"/>
 
                         <p:outputLabel for="telefon" value="Kontakt telefon:"/>
-                        <p:inputText id="telefon" placeholder="kontakt telefon" value="#{accountController.noviKorisnik.telefon}" required="true" requiredMessage="Obavezno polje." label="Kontakt telefon"/>
+                        <p:inputText id="telefon" placeholder="kontakt telefon" value="#{accountController.noviKorisnik.telefon}" required="true" requiredMessage="Obavezno polje." label="Kontakt telefon">
+                            <f:validateRegex pattern="^([0-9]*)$"/>
+                            <f:validateLength minimum="9" maximum="10" />
+                        </p:inputText> 
                         <p:message for ="telefon" style="color:red"/>
 
                         <p:outputLabel for="kategorijaZaposlenja" value="Kategorija zaposlenja"/>
@@ -71,7 +84,7 @@
 
                     </h:panelGrid>
                     <br/>
-                                        <p:captcha />
+                    <p:captcha />
                     <br/>
 
                     <p:commandButton value="Registruj se" ajax="false" action="#{accountController.register()}"/>

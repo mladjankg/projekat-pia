@@ -75,30 +75,32 @@
                 <h:form id="dodavanje_prevoznika">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="naziv_prevoznika" value="Naziv:"/>
-                        <p:inputText id="naziv_prevoznika" value="#{medjugradskeView.noviPrevoznik.naziv}"/>
+                        <p:inputText id="naziv_prevoznika" value="#{medjugradskeView.noviPrevoznik.naziv}" required="true"/>
 
                         <p:outputLabel for="adresa_prevoznika" value="Adresa:"/>
-                        <p:inputText id="adresa_prevoznika" value="#{medjugradskeView.noviPrevoznik.adresa}"/>
+                        <p:inputText id="adresa_prevoznika" value="#{medjugradskeView.noviPrevoznik.adresa}" required="true"/>
 
                         <p:outputLabel for="broj_telefona_prevoznika" value="Broj telefona:"/>
-                        <p:inputText id="broj_telefona_prevoznika" value="#{medjugradskeView.noviPrevoznik.telefon}"/>
+                        <p:inputText id="broj_telefona_prevoznika" value="#{medjugradskeView.noviPrevoznik.telefon}" required="true"/>
 
                         <p:outputLabel for="logo_prevozinka" value="Logo prevoznika:" />
                         <p:fileUpload   id="logo_prevozinka"
                                         fileUploadListener="#{medjugradskeView.logoPrevoznikaUpload}"
                                         mode="advanced" 
                                         dragDropSupport="false"
-                                        update="dodavanje_prevoznika_poruka" 
                                         fileLimit="1" 
                                         allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-
-                        <p:messages for="dodavanje_prevoznika" id="dodavanje_prevoznika_poruka"  autoUpdate="true" closable="true"/>
 
 
                     </h:panelGrid>
 
-                    <p:commandButton  value="Dodaj prevoznika" actionListener="#{medjugradskeView.dodajPrevoznika}" update=":medjugradske_panel">
+                    <p:commandButton  value="Dodaj prevoznika" 
+                                      actionListener="#{medjugradskeView.dodajPrevoznika}" 
+                                      update=":medjugradske_panel">
                     </p:commandButton>
+                    <p:messages severity="info error" showDetail="true" showSummary="false">
+                        <p:autoUpdate/>
+                    </p:messages>
                 </h:form>
             </p:tab>
 
@@ -137,8 +139,14 @@
                         <p:selectOneMenu id="prevoznik_vozaca" value="#{medjugradskeView.noviVozac.prevoznik}" converter="prevoznikConverter" rendered="#{not empty medjugradskeView.prevoznici}">
                             <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemValue="#{p}" itemLabel="#{p.naziv}"/>
                         </p:selectOneMenu>
-                        <p:commandButton value="Dodaj vozača" update=":medjugradske_panel" actionListener="#{medjugradskeView.dodajVozaca}" disabled="#{empty medjugradskeView.prevoznici}"/>
+                        <p:commandButton value="Dodaj vozača" 
+                                         update=":medjugradske_panel" 
+                                         actionListener="#{medjugradskeView.dodajVozaca}" 
+                                         disabled="#{empty medjugradskeView.prevoznici}"/>
                     </p:panelGrid>
+                    <p:messages severity="info error" showDetail="true" showSummary="false">
+                        <p:autoUpdate/>
+                    </p:messages>
                 </h:form>
 
             </p:tab>
@@ -166,13 +174,20 @@
                         <p:fileUpload fileUploadListener="#{medjugradskeView.handleFileUpload}" mode="advanced" dragDropSupport="false"
                                       multiple="true"  fileLimit="5" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
 
-                        <p:commandButton value="Dodaj autobus" actionListener="#{medjugradskeView.dodajAutobus}" update=":medjugradske_panel" disabled="#{empty medjugradskeView.prevoznici}"/>
+                        <p:commandButton value="Dodaj autobus" 
+                                         actionListener="#{medjugradskeView.dodajAutobus}" 
+                                         update=":medjugradske_panel" 
+                                         disabled="#{empty medjugradskeView.prevoznici}"/>
                     </p:panelGrid>
-
+                    <p:messages severity="info error" showDetail="true" showSummary="false">
+                        <p:autoUpdate/>
+                    </p:messages>
                 </h:form>
             </p:tab>
         </p:accordionPanel>
-
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

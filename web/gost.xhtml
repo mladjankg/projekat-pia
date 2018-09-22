@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>#{applicationController.visibleName} | Gost</title>
         <f:metadata>
@@ -41,7 +42,7 @@
                 <p:column headerText="">
                     <p:commandButton id="medjustanice" value="Međustanice" process="@this"/>
                     <p:overlayPanel id="medjustanicePanel" for="medjustanice" hideEffect="fade" dynamic="true" style="width:600px">
-                        <p:dataTable var="m" value="#{p.medjugradskaLinija.medjustanice}" rows="5" paginator="true">
+                        <p:dataTable var="m" value="#{p.medjugradskaLinija.medjustanice}" rows="5" paginator="true" paginatorAlwaysVisible="false">
                             <p:column>
                                 <h:outputText value="#{m.naziv}"/>
                             </p:column>
@@ -101,7 +102,7 @@
 
                 <p:commandButton value="Pretraga" actionListener="#{gostViewController.pretraga}" update=":pretraga_panel" />
             </h:form>
-            
+
 
             <p:dataTable style="margin-top:15px" id="rezultati_pretrage" value="#{gostViewController.rezultatPretrage}" var="p" paginator="true" rows="5" rendered="#{not empty gostViewController.rezultatPretrage}">
                 <p:column headerText="Polazna stanica">
@@ -131,7 +132,7 @@
                 <p:column headerText="">
                     <p:commandButton id="medjustanice" value="Međustanice"/>
                     <p:overlayPanel id="medjustanicePanel" for="medjustanice" hideEffect="fade" dynamic="true" style="width:600px">
-                        <p:dataTable var="m" value="#{p.medjugradskaLinija.medjustanice}" rows="5" paginator="true">
+                        <p:dataTable var="m" value="#{p.medjugradskaLinija.medjustanice}" rows="5" paginator="true" paginatorAlwaysVisible="false">
                             <p:column>
                                 <h:outputText value="#{m.naziv}"/>
                             </p:column>
@@ -142,5 +143,9 @@
             </p:dataTable>
         </p:panel>
     </h:body>
+
+    <ui:insert>
+        <ui:include src="template/footer.xhtml"/>
+    </ui:insert>
 </html>
 

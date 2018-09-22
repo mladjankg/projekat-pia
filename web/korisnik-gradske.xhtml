@@ -26,7 +26,7 @@
                              rows="10" paginatorAlwaysVisible="false">
 
                     <p:column filterBy="#{l.brojLinije}" filterMatchMode="contains" headerText="Broj linije" >
-                            <h:outputText value="#{l.brojLinije}"/>
+                        <h:outputText value="#{l.brojLinije}"/>
                     </p:column>
 
                     <p:column filterBy="#{l.polaznaStanica.naziv}" filterMatchMode="contains" headerText="Polazno stajalište">
@@ -40,22 +40,22 @@
                         <p:commandButton value="Detalji" onclick="PF('dlg#{l.brojLinije}').show()"/>
                         <p:dialog header="Detalji linije #{l.brojLinije}" widgetVar="dlg#{l.brojLinije}" modal="true" width="50%">
                             <p:panel header="Vozači">
-                            <p:dataTable value="#{l.vozaci}" var="v" emptyMessage="Liniji nije dodeljen ni jedan vozac">
-                                <p:column headerText="Ime i prezime">
-                                    <h:outputText value="#{v.ime} #{v.prezime}"/>
-                                </p:column>
-                                
-                                <p:column headerText="Godine iskustva">
-                                    <h:outputText value="#{v.godineIskustva}"/>
-                                </p:column>
-                            </p:dataTable>
+                                <p:dataTable value="#{l.vozaci}" var="v" emptyMessage="Liniji nije dodeljen ni jedan vozac">
+                                    <p:column headerText="Ime i prezime">
+                                        <h:outputText value="#{v.ime} #{v.prezime}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Godine iskustva">
+                                        <h:outputText value="#{v.godineIskustva}"/>
+                                    </p:column>
+                                </p:dataTable>
                             </p:panel>
                             <p:panel header="Red vožnje">
-                            <p:dataGrid columns="2" layout="grid" value="#{l.redVoznje}" var="p">
-                                <h:outputText value="#{p.vremePolaska}">
-                                    <f:convertDateTime pattern="HH:mm"/>
-                                </h:outputText>
-                            </p:dataGrid>      
+                                <p:dataGrid columns="2" layout="grid" value="#{l.redVoznje}" var="p">
+                                    <h:outputText value="#{p.vremePolaska}">
+                                        <f:convertDateTime pattern="HH:mm"/>
+                                    </h:outputText>
+                                </p:dataGrid>      
                             </p:panel>
                         </p:dialog>   
                     </p:column>
@@ -87,6 +87,11 @@
                 </p:column>
             </p:dataTable>
         </p:panel>
+
+
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

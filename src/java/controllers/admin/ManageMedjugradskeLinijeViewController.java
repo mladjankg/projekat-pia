@@ -377,16 +377,35 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
     }
 
     public void dodajPolazak() {
-        Integer id = BeanManager.addBean(this.noviPolazak);
+        this.noviPolazak.setPreostaloMesta(this.noviPolazak.getAutobus().getBrojMesta());
 
+        Integer id = BeanManager.addBean(this.noviPolazak);
         if (id == null) {
             //TODO: Add message.
             return;
         }
 
-        this.noviPolazak.getMedjugradskaLinija().getPolasci().add(this.noviPolazak);
-        this.noviPolazak.getVozac().getPolasci().add(this.noviPolazak);
-        this.noviPolazak.getAutobus().getPolasci().add(this.noviPolazak);
+        //this.noviPolazak.getMedjugradskaLinija().getPolasci().add(this.noviPolazak);
+        for (MedjugradskaLinija m: this.linije) {
+            if (m.getId().equals(this.noviPolazak.getMedjugradskaLinija().getId())) {
+                m.getPolasci().add(this.noviPolazak);
+            }
+        }
+
+        //this.noviPolazak.getVozac().getPolasci().add(this.noviPolazak);
+        for(Vozac v: this.vozaci) {
+            if (v.getId().equals(this.noviPolazak.getVozac().getId())) {
+                v.getPolasci().add(this.noviPolazak);
+            }
+        }
+        
+        //this.noviPolazak.getAutobus().getPolasci().add(this.noviPolazak);
+        for (Autobus a: this.autobusi) {
+            if (a.getId().equals(this.noviPolazak.getAutobus().getId())) {
+                a.getPolasci().add(this.noviPolazak);
+            }
+        }
+        
         this.noviPolazak = new PolazakMedjugradska();
         this.izabraniPrevoznik = null;
         this.polazakStepsIndex = 0;
@@ -394,7 +413,7 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
     public void dodajVozaca() {
         if (noviVozac == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fatalna greska pri dodavanju vozaca.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Fatalna greska pri dodavanju vozača."));
             return;
         }
 
@@ -402,13 +421,13 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         Integer i = BeanManager.addBean(noviVozac);
 
         if (i == null || i == 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska pri dodavanju vozaca.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Greska pri dodavanju vozaca."));
             return;
         }
 
         this.vozaci.add(noviVozac);
         noviVozac = new Vozac();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Vozac uspesno dodat.", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Vozač uspešno dodat."));
 
     }
 
@@ -471,6 +490,7 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
         this.autobusi.add(this.noviAutobus);
         this.noviAutobus = new Autobus();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Autobus uspešno dodat."));
     }
 
     public void dodajPrevoznika() {
@@ -499,12 +519,51 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         this.noviPrevoznik = new Prevoznik();
         this.logoPrevoznika = null;
 
-        FacesContext.getCurrentInstance().addMessage(":medjugradske_panel:dodavanje_prevoznika:dodavanje_prevoznika_poruka", new FacesMessage(FacesMessage.SEVERITY_WARN, "Prevoznik uspesno dodat.", ""));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Prevoznik uspešno dodat."));
     }
 
     public void dodajLiniju() {
 
         //TODO: Dodaj proveru da li je vec dodata stanica sa istom pocetnom i krajnjom i istim prevoznikom.
+        List<MedjugradskaLinija> l = linije.stream().filter(f -> f.getPrevoznik().equals(novaLinija.getPrevoznik())).collect(toList());
+
+        for (MedjugradskaLinija linija : l) {
+            if (linija.getPolaznaStanica().equals(novaLinija.getPolaznaStanica())
+                    && linija.getOdredisnaStanica().equals(novaLinija.getOdredisnaStanica())) {
+                //Ako imaju istu pocetnu i odredisnu stanicu onda proveravaj medjustanice
+                //u suprotnom nisu iste
+                if (linija.getMedjustanice().size() == novaLinija.getMedjustanice().size()) {
+                    //Ukoliko imaju isti broj medjustanica, proveri ih
+
+                    if (linija.getMedjustanice().isEmpty()) {
+                        //Ukoliko nemaju medjustanice a imaju istu pocetnu i krajnju stanicu onda su iste
+                        FacesContext
+                                .getCurrentInstance()
+                                .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Linija sa unetim parametrima već postoji."));
+                        return;
+
+                    } else {
+                        //Uporedi svaku medjustanicu
+                        boolean equals = true;
+                        for (int i = 0; i < linija.getMedjustanice().size(); i++) {
+                            if (!linija.getMedjustanice().get(i).equals(linija.getMedjustanice().get(i))) {
+                                equals = false;
+                                break;
+                            }
+                        }
+
+                        if (equals) {
+                            FacesContext
+                                    .getCurrentInstance()
+                                    .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Linija sa unetim parametrima već postoji."));
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.novaLinija.setMedjustanice(this.medjustanice.getTarget());
         Integer id = BeanManager.addBean(this.novaLinija);
 
         if (id == null) {

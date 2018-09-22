@@ -13,11 +13,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import utils.ApplicationUtils;
 
@@ -34,7 +32,7 @@ public class KorisnikGradskeViewController implements Serializable {
     private List<GradskaLinija> filtriraneLinije;
 
     private List<GradskaLinija> pretragaLinija;
-    
+
     private String nazivOdredista;
 
     public KorisnikGradskeViewController() {
@@ -77,13 +75,13 @@ public class KorisnikGradskeViewController implements Serializable {
 
     public void pretragaPoOdredistu() {
         //linije = BeanManager.getList("from gradske_linije where aktivna = true order by broj_linije");
-        
+
         if (ApplicationUtils.isNullOrEmpty(nazivOdredista)) {
             this.pretragaLinija = new ArrayList<>();
             this.pretragaLinija.addAll(this.linije);
             return;
         }
-        
+
         String nazivLower = nazivOdredista.toLowerCase();
         this.pretragaLinija = linije.stream()
                 .filter((l) -> {
@@ -110,7 +108,7 @@ public class KorisnikGradskeViewController implements Serializable {
                     return found;
                 })
                 .collect(toList());
-        
+
     }
 
     public List<GradskaLinija> getPretragaLinija() {
@@ -121,6 +119,4 @@ public class KorisnikGradskeViewController implements Serializable {
         this.pretragaLinija = pretragaLinija;
     }
 
-    
-    
 }

@@ -10,7 +10,7 @@
             <f:viewAction action="#{accountController.adminCheck}"/>
 
         </f:metadata>
-        
+
         <title>Busomanijak | Zahtevi za registraciju</title>
     </h:head>
     <h:body>
@@ -58,10 +58,15 @@
                             <p:outputLabel for="period_otkazivanja" value="Otkazi do:"/>
 
                             <p:calendar id="period_otkazivanja" mindate="#{gradskeViewController.sutra}" value="#{gradskeViewController.periodOtkazivanja}" required="true"/>
-                            <p:commandButton action="#{gradskeViewController.otkaziLiniju}" update=":gradske_panel" value="Otkazi"/>
+                            <p:commandButton action="#{gradskeViewController.otkaziLiniju}" 
+                                             update=":gradske_panel" 
+                                             value="Otkazi"
+                                             disabled="#{empty gradskeViewController.neotkazaneLinije}"/>
                         </p:panelGrid>
-                        <p:growl for="otkazivanje_linije"/>
-                    </h:form>
+                        <p:messages severity="info error" showSummary="false" showDetail="true">
+                            <p:autoUpdate/>
+                        </p:messages>
+                    </h:form> 
                 </div>
             </p:tab>
 
@@ -84,22 +89,23 @@
                             </p:selectManyMenu>
                             <h:outputText value="Trenutno nema slobodnih vozača." rendered="#{empty gradskeViewController.vozaci}"/>
 
-                            <p:outputLabel for="medjustanice" value="Međustanice"/>
+                            <p:outputLabel for="medjustanice" value="Stanice"/>
                             <p:pickList id="medjustanice" value="#{gradskeViewController.medjustanice}" var="st" itemValue="#{st}" itemLabel="#{st}" converter="stanicaConverter"/>
 
                             <p:panel style="border:none;padding:0;margin:0">
                                 <p:calendar  value="#{gradskeViewController.vremePolaska}" pattern="HH:mm" timeOnly="true" id="vreme_polaska" size="14">
-                                   <p:ajax event="dateSelect" listener="#{gradskeViewController.onDateSelect}"  />
+                                    <p:ajax event="dateSelect" listener="#{gradskeViewController.onDateSelect}"  />
                                 </p:calendar>
                                 <br/>
                                 <p:commandButton value="Dodaj polazak" >
                                     <p:ajax event="click" 
                                             update="polasci"
+                                            process="vreme_polaska"
                                             listener="#{gradskeViewController.dodajPolazak}" 
                                             />
                                 </p:commandButton>
                             </p:panel>
-                            
+
                             <p:panel id="polasci">
                                 <p:dataList value="#{gradskeViewController.novaLinija.redVoznje}" var="p" rendered="#{not empty gradskeViewController.novaLinija.redVoznje}">
                                     <f:facet name="header">Polasci</f:facet>
@@ -111,6 +117,9 @@
                             </p:panel>
                             <p:commandButton value="Dodaj liniju" update=":gradske_panel" action="#{gradskeViewController.dodajLiniju}"/>
                         </p:panelGrid>
+                        <p:messages severity="info error" showDetail="true" showSummary="false">
+                            <p:autoUpdate/>
+                        </p:messages>
                     </h:form>
                 </div>
             </p:tab>
@@ -146,12 +155,19 @@
                             required="true" 
                             pattern="yyyy-MM-dd" />
 
-                        
+
                         <p:commandButton value="Dodaj vozača" update=":gradske_panel" action="#{gradskeViewController.dodajVozaca}"/>
                     </p:panelGrid>
+                    <p:messages severity="info error" showDetail="true" showSummary="false">
+                        <p:autoUpdate/>
+                    </p:messages>
                 </h:form>
             </p:tab>
         </p:accordionPanel>
+
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

@@ -43,26 +43,35 @@
                             <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
                         </h:outputText>
                     </p:column>
-                    
+
                     <p:column headerText="Vreme dolaska" width="auto">
                         <h:outputText value="#{p.vremeDolaska}">
                             <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
                         </h:outputText>
                     </p:column>
-                    
+
                     <p:column headerText="Preostalo mesta">
                         <h:outputText value="#{p.preostaloMesta}"/>
                     </p:column>
-                    
+
                     <p:column>
-                        <p:commandButton value="Detalji" action="#{korisnikMedjugradskeView.prikazDetalja(p)}" /> 
+                        <p:commandButton value="Detalji" action="#{detaljiLinijeView.prikazDetalja(p)}"/> 
                     </p:column>
                     <p:column>
-                        <p:commandButton value="Rezerviši kartu" update=":medjugradske_panel" actionListener="#{korisnikMedjugradskeView.rezervisiKartu(p)}"/>
+                        <h:outputText value="Rezervacije su zatvorene" rendered="#{not p.otvoreneRezervacije}"/>
+                        <p:commandButton value="Rezerviši kartu" 
+                                         update=":medjugradske_panel" 
+                                         actionListener="#{korisnikMedjugradskeView.rezervisiKartu(p)}"
+                                         rendered="#{(p.otvoreneRezervacije) and (not korisnikMedjugradskeView.korisnikRezervisao(p))}"
+                                         />
                     </p:column>
                 </p:dataTable>
             </h:form>
         </p:panel>
+
+        <ui:insert>
+            <ui:include src="template/footer.xhtml"/>
+        </ui:insert>
     </h:body>
 </html>
 

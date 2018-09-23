@@ -131,9 +131,10 @@ public class AdminController implements Serializable {
         k.setAdminPotvrdio(true);
         k.setKorisnikValidan(false);
         zahteviZaRegistraciju.remove(k);
-        Poruka p = new Poruka("Administrator je odbio vaš zahtev za registraciju.", Calendar.getInstance().getTime(), k);
-        BeanManager.addBean(p);
-        KorisnikManager.updateKorisnik(k);
+        //Poruka p = new Poruka("Administrator je odbio vaš zahtev za registraciju.", Calendar.getInstance().getTime(), k);
+        //BeanManager.addBean(p);
+        //KorisnikManager.updateKorisnik(k);
+        BeanManager.deleteBean(Korisnik.class, k.getId());
         return null;
     }
 

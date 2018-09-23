@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import utils.HibernateUtil;
 
 /**
@@ -32,7 +34,9 @@ public class ApplicationController {
 
     @PreDestroy
     public void shutdown() {
-        // ...
+        
+        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        session.invalidate();
     }
 
     private String visibleName = "BUSOMAN";

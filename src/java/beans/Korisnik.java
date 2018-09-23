@@ -5,6 +5,7 @@
  */
 package beans;
 
+import beans.managers.BeanManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -221,6 +222,7 @@ public class Korisnik implements Serializable{
     }
 
     public List<Karta> getKarte() {
+
         return karte;
     }
 

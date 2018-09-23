@@ -133,7 +133,7 @@ public class Autobus implements Serializable {
         
         String basePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("upload.location") + File.separator;
         while (st.hasMoreTokens()) {
-            lista.add(basePath + st.nextToken());
+            lista.add(st.nextToken());
         }
         
         return lista;

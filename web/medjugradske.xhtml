@@ -34,15 +34,15 @@
             <p:column headerText="">
                 <p:commandButton id="pregled_polazaka" value="Polasci"/>
                 <p:overlayPanel id="polasciPanel" for="pregled_polazaka" hideEffect="fade" dynamic="true" style="width:600px">
-                    <p:dataTable var="p" value="#{mg.polasci}" rows="5" paginator="true">
+                    <p:dataTable var="p" value="#{mg.polasci}" rows="5" paginator="true" paginatorAlwaysVisible="false">
                         <p:column headerText="Polazak">
                             <h:outputText value="#{p.vremePolaska}">
-
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Dolazak">
                             <h:outputText value="#{p.vremeDolaska}">
-
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm"/>
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Vozač">
@@ -165,12 +165,12 @@
 
                         <p:outputLabel for="registracija" value="Registracija:"/>
                         <p:inputText id="registracija" value="#{medjugradskeView.noviAutobus.registracija}" required="true"/>
-                        
+
                         <p:outputLabel for="prevoznik_autobusa" value="Prevoznik:"/>
                         <p:selectOneMenu id="prevoznik_autobusa" value="#{medjugradskeView.noviAutobus.prevoznik}" converter="prevoznikConverter" rendered="#{not empty medjugradskeView.prevoznici}">
                             <f:selectItems value="#{medjugradskeView.prevoznici}" var="p" itemValue="#{p}" itemLabel="#{p.naziv}"/>
                         </p:selectOneMenu>
-                        
+
                         <p:fileUpload fileUploadListener="#{medjugradskeView.handleFileUpload}" mode="advanced" dragDropSupport="false"
                                       multiple="true"  fileLimit="5" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
 

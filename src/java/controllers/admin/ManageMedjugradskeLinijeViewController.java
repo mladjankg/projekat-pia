@@ -381,7 +381,7 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
 
         Integer id = BeanManager.addBean(this.noviPolazak);
         if (id == null) {
-            //TODO: Add message.
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Greska pri dodavanju polaska."));
             return;
         }
 
@@ -389,13 +389,15 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         for (MedjugradskaLinija m: this.linije) {
             if (m.getId().equals(this.noviPolazak.getMedjugradskaLinija().getId())) {
                 m.getPolasci().add(this.noviPolazak);
+                break;
             }
-        }
+         }
 
         //this.noviPolazak.getVozac().getPolasci().add(this.noviPolazak);
         for(Vozac v: this.vozaci) {
             if (v.getId().equals(this.noviPolazak.getVozac().getId())) {
                 v.getPolasci().add(this.noviPolazak);
+                break;
             }
         }
         
@@ -403,13 +405,15 @@ public class ManageMedjugradskeLinijeViewController implements Serializable {
         for (Autobus a: this.autobusi) {
             if (a.getId().equals(this.noviPolazak.getAutobus().getId())) {
                 a.getPolasci().add(this.noviPolazak);
+                break;
             }
         }
         
         this.noviPolazak = new PolazakMedjugradska();
         this.izabraniPrevoznik = null;
         this.polazakStepsIndex = 0;
-    }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Polazak uspešno dodat."));
+        }
 
     public void dodajVozaca() {
         if (noviVozac == null) {

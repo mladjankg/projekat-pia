@@ -21,24 +21,25 @@
         </div>
 
         <h:form id="karta_form">
-                 <p:panelGrid rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta)}"  columns="2">
-                    <p:outputLabel for="kategorija" value="Kategorija:" />
-                    <h:outputText id="kategorija" value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
+            <p:panelGrid rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta)}"  columns="2">
+                <p:outputLabel for="kategorija" value="Kategorija:" />
+                <h:outputText id="kategorija" value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
 
-                    <p:outputLabel for="vazi_do" value="Važi do:" rendered="#{accountController.korisnik.gradskaKarta.odobrena}"/>
-                    <h:outputText id="vazi_do" value="#{accountController.korisnik.gradskaKarta.datumVazenja}" rendered="#{accountController.korisnik.gradskaKarta.odobrena}">
-                        <f:convertDateTime pattern="dd-MM-yyyy"/>
-                    </h:outputText>
-                    
-                     <p:outputLabel for="cena" value="Cena:" />
-                     <h:outputText id="cena" value="#{accountController.korisnik.kategorijaZaposlenja.cenaKarte}"/>
+                <p:outputLabel for="vazi_do" value="Važi do:" rendered="#{accountController.korisnik.gradskaKarta.odobrena}"/>
+                <h:outputText id="vazi_do" value="#{accountController.korisnik.gradskaKarta.datumVazenja}" rendered="#{accountController.korisnik.gradskaKarta.odobrena}">
+                    <f:convertDateTime pattern="dd-MM-yyyy"/>
+                </h:outputText>
 
-                    
-                </p:panelGrid>
-            <h:outputText rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta) 
-                                      and not accountController.korisnik.gradskaKarta.adminPotvrdio}"  
-                          value="Kupovina još uvek nije odobrena."
-                          />
+                <p:outputLabel for="cena" value="Cena:" />
+                <h:outputText id="cena" value="#{accountController.korisnik.kategorijaZaposlenja.cenaKarte}"/>
+
+
+            </p:panelGrid>
+            <p:outputLabel rendered="#{korisnikViewController.isGradskaValidna(accountController.korisnik.gradskaKarta) 
+                                       and not accountController.korisnik.gradskaKarta.adminPotvrdio}"  
+                           value="Kupovina još uvek nije odobrena."
+                           style="margin-top: 15px"
+                           />
 
 
 
@@ -47,8 +48,12 @@
                 <h:outputText value="#{accountController.korisnik.kategorijaZaposlenja.naziv}"/>
 
                 <p:outputLabel  value="Tip:"/>
+                
                 <p:outputLabel  rendered="#{accountController.korisnik.kategorijaZaposlenja.tip}" value="godišnja"/>
                 <p:outputLabel  rendered="#{not accountController.korisnik.kategorijaZaposlenja.tip}" value="mesečna"/>
+                
+                <p:outputLabel for="cena_kupovina" value="Cena:" />
+                <h:outputText id="cena_kupovina" value="#{accountController.korisnik.kategorijaZaposlenja.cenaKarte}"/>
 
                 <p:commandButton value="Naruči kartu za gradski prevoz" process="@form" update="karta_form">
                     <p:ajax event="click" process="@form" update="karta_form" listener="#{korisnikViewController.naruciGradskuKartu}"/>

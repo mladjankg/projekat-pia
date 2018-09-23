@@ -100,7 +100,7 @@
                                 <p:commandButton value="Dodaj polazak" >
                                     <p:ajax event="click" 
                                             update="polasci"
-                                            process="vreme_polaska"
+                                            process="@this"
                                             listener="#{gradskeViewController.dodajPolazak}" 
                                             />
                                 </p:commandButton>
@@ -115,9 +115,9 @@
                                 </p:dataList>
                                 <h:outputText value="Nije dodat ni jedan polazak." rendered="#{empty gradskeViewController.novaLinija.redVoznje}"/>
                             </p:panel>
-                            <p:commandButton value="Dodaj liniju" update=":gradske_panel" action="#{gradskeViewController.dodajLiniju}"/>
+                            <p:commandButton value="Dodaj liniju" id="dodavanje_polaska_button" update=":gradske_panel" action="#{gradskeViewController.dodajLiniju}"/>
                         </p:panelGrid>
-                        <p:messages severity="info error" showDetail="true" showSummary="false">
+                        <p:messages severity="info error" showDetail="true" showSummary="false" >
                             <p:autoUpdate/>
                         </p:messages>
                     </h:form>

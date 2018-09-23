@@ -16,13 +16,25 @@
             <p:commandButton action="#{detaljiLinijeView.nazad}"  value="Nazad"/>
         </h:form>
 
+        <p:panelGrid style="margin-bottom: 15px; margin-top: 15px" columns="2" id="mesta_panel">
+            <p:outputLabel for="broj_mesta" value="Broj preostalih mesta:"/>
+            <h:outputText id="broj_mesta" value="#{detaljiLinijeView.p.preostaloMesta}"/>
+        </p:panelGrid>
 
+        <h:form id="rezervacija_form">
+            <p:commandButton 
+                style="margin-bottom: 15px" 
+                value="Rezervisi kartu" 
+                actionListener="#{detaljiLinijeView.rezervisiKartu()}" 
+                rendered="#{detaljiLinijeView.p.otvoreneRezervacije and (not detaljiLinijeView.korisnikRezervisao(detaljiLinijeView.p))}"
+                update=":rezervacija_form :mesta_panel" />
+        </h:form>
 
-        <p:panelGrid columns="2">
+        <p:accordionPanel id="detalji_panel">
 
-            <p:panel header="Prevoznik">
+            <p:tab title="Prevoznik">
                 <p:panelGrid columns="2">
-                    <p:graphicImage name="images/#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.logoURL}"/>
+                    <p:graphicImage library="resources" height="200" name="upload/#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.logoURL}"/>
 
                     <p:panelGrid columns="2">
                         <p:outputLabel for="naziv_prevoznika" value="Naziv:"/>
@@ -35,9 +47,9 @@
                         <h:outputText id="broj_telefona_prevoznika" value="#{detaljiLinijeView.p.medjugradskaLinija.prevoznik.telefon}"/>
                     </p:panelGrid>
                 </p:panelGrid>
-            </p:panel>
+            </p:tab>
 
-            <p:panel header="Vozač">
+            <p:tab title="Vozač">
                 <p:panelGrid columns="2">
                     <p:outputLabel for="ime_vozaca" value="Ime i prezime"/>
                     <h:outputText id="ime_vozaca" value="#{detaljiLinijeView.p.vozac.ime} #{detaljiLinijeView.p.vozac.prezime}"/>
@@ -50,12 +62,12 @@
                     <p:outputLabel for="godine_iskustva" value="Godine iskustva"/>
                     <h:outputText id="godine_iskustva" value="#{detaljiLinijeView.p.vozac.godineIskustva}"/>
                 </p:panelGrid>
-            </p:panel>
+            </p:tab>
 
-            <p:panel header="Autobus">
+            <p:tab title="Autobus">
                 <p:panelGrid columns="2">
                     <p:galleria value="#{detaljiLinijeView.p.autobus.slikeList}" var="image" panelWidth="400" panelHeight="300">
-                        <p:graphicImage name="#{image}" alt="#{image}"/>
+                        <p:graphicImage library="resources" name="upload/#{image}" alt="#{image}" width="400" height="300"/>
                     </p:galleria>
 
                     <p:panelGrid columns="2">
@@ -66,21 +78,12 @@
                         <h:outputText id="model" value="#{detaljiLinijeView.p.autobus.model}"/>
                     </p:panelGrid>
                 </p:panelGrid>
-            </p:panel>
-            <p:panel header="Karta">
-                <h:form id="rezervacija_form">
-                    <p:commandButton value="Rezervisi kartu" 
-                                     actionListener="#{detaljiLinijeView.rezervisiKartu()}" 
-                                     rendered="#{detaljiLinijeView.p.otvoreneRezervacije and (not detaljiLinijeView.korisnikRezervisao(detaljiLinijeView.p))}"
-                                     update=":rezervacija_form"/>
-                </h:form>
-            </p:panel>
-
-        </p:panelGrid>
-        <p:panel header="Stanice">
+            </p:tab>
+        </p:accordionPanel>
+        <p:tab title="Stanice">
             <p:gmap center="#{detaljiLinijeView.p.medjugradskaLinija.polaznaStanica.latitude}, #{detaljiLinijeView.p.medjugradskaLinija.polaznaStanica.longitude}" 
                     zoom="8" type="HYBRID" style="height: 400px" model="#{detaljiLinijeView.mapModel}"/>
-        </p:panel>
+        </p:tab>
 
         <ui:insert>
             <ui:include src="template/footer.xhtml"/>

@@ -12,6 +12,9 @@
         </f:metadata>
     </h:head>
     <h:body>
+                <ui:insert>
+            <ui:include src="template/gost-header.xhtml"/>
+        </ui:insert>
         <p:panel header="Najskoriji polasci" collapsed="true" toggleable="true">
 
             <p:dataTable value="#{gostViewController.najskorijiPolasci}" var="p">

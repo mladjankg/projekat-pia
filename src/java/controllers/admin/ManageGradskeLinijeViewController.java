@@ -288,7 +288,7 @@ public class ManageGradskeLinijeViewController implements Serializable {
         BeanManager.updateBean(gl);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        Poruka p = new Poruka("Linija " + gl.getId() + " je otkazana do " + sdf.format(gl.getOtkazanaDo()) + ".", today, controller.getKorisnik());
+        Poruka p = new Poruka("Linija " + gl.getId() + " je otkazana do " + sdf.format(gl.getOtkazanaDo()) + ".", Calendar.getInstance().getTime(), controller.getKorisnik());
         p.setTip(true);
         BeanManager.addBean(p);
         

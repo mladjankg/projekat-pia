@@ -30,6 +30,9 @@
                                  action="#{medjugradskeView.sledeciKorakPolazak()}" 
                                  update=":medjugradske_panel" 
                                  disabled="#{empty medjugradskeView.prevoznici}"/>
+                <p:messages showDetail="true" showSummary="false" severity="info error">
+                    <p:autoUpdate />
+                </p:messages>
             </h:form>
 
             <h:form rendered="#{medjugradskeView.polazakStepsIndex == 1}">
@@ -57,7 +60,7 @@
                         navigator="true"
                         value="#{medjugradskeView.noviPolazak.vremePolaska}" 
                         mindate="#{applicationController.danas}"
-                        
+
                         required="true" 
 
                         pattern="yyyy-MM-dd HH:mm">
@@ -132,6 +135,10 @@
 
                     <p:commandButton value="Prethodni korak" actionListener="#{medjugradskeView.prethodniKorakPolazak()}" update=":medjugradske_panel" process="@this"/>
                     <p:commandButton value="Potvrdi" actionListener="#{medjugradskeView.dodajPolazak}" update=":medjugradske_pregled :medjugradske_panel"/>
+
+                    <p:messages showDetail="true" showSummary="false" severity="info error">
+                        <p:autoUpdate />
+                    </p:messages>
                 </p:panelGrid>
 
 

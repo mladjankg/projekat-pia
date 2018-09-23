@@ -9,7 +9,10 @@ import beans.Korisnik;
 import beans.managers.BeanManager;
 import beans.managers.KorisnikManager;
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,14 +33,13 @@ import utils.ApplicationUtils;
 public class AccountController implements Serializable {
 
     private Korisnik korisnik;
-    private Korisnik noviKorisnik;
     private String username;
     private String password;
     private String loginError;
 
     public AccountController() {
         korisnik = null;
-        noviKorisnik = new Korisnik();
+
         username = null;
         password = null;
 
@@ -48,12 +50,23 @@ public class AccountController implements Serializable {
         if (k == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška:", "Neispravno korisničko ime"));
             this.username = null;
-//loginError = "Neispravno korisnicko ime i/ili lozinka.";
             return null;
         }
+        
+        //Provera lozinke
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException ex) {
+            return null;
+        }
+        messageDigest.update(this.password.getBytes());
+        String encodedString = new String(messageDigest.digest());
+        String enkriptovanaLozinka = Base64.getEncoder().encodeToString(encodedString.getBytes());
 
-        if (!k.getLozinka().equals(this.password)) {
+        if (!k.getLozinka().equals(enkriptovanaLozinka)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greška:", "Neispravna lozinka"));
+            this.password = null;
             return null;
         }
 
@@ -64,7 +77,7 @@ public class AccountController implements Serializable {
         } else {
             if (!korisnik.isAdminPotvrdio()) {
                 korisnik = null;
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Info:", "Administrator jos nije odobrio Vas zahtev za registraciju."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Info:", "Administrator još uvek nije odobrio Vaš zahtev za registraciju."));
                 return null;
             }
             
@@ -89,17 +102,6 @@ public class AccountController implements Serializable {
 
     public String guest() {
         return null;
-    }
-
-    public String register() {
-        if (KorisnikManager.getKorisnikByUsername(noviKorisnik.getKorisnickoIme()) != null) {
-            return null;
-        }
-
-        KorisnikManager.addKorisnik(noviKorisnik);
-        noviKorisnik = new Korisnik();
-
-        return "index";
     }
 
     public String userCheck() {
@@ -141,14 +143,6 @@ public class AccountController implements Serializable {
 
     public void setKorisnik(Korisnik korisnik) {
         this.korisnik = korisnik;
-    }
-
-    public Korisnik getNoviKorisnik() {
-        return noviKorisnik;
-    }
-
-    public void setNoviKorisnik(Korisnik novKorisnik) {
-        this.noviKorisnik = novKorisnik;
     }
 
     public String getUsername() {

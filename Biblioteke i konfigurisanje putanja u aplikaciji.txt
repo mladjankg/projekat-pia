@@ -1,0 +1,9 @@
+MySQL JDBS, JSTL 1.2.1 - Iz libraries
+Primefaces 6.2 : https://www.primefaces.org/downloads/
+Hibernate 5.3.4 : http://hibernate.org/orm/releases/5.3/
+Humanity theme : https://repository.primefaces.org/org/primefaces/themes/humanity/
+Commons FileUpload: https://commons.apache.org/proper/commons-fileupload/download_fileupload.cgi
+
+
+Promeni naziv aplikacije u 	META-INF config.xml
+Promeni putanju do resursa u web.xml
